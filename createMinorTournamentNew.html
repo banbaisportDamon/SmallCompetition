@@ -206,28 +206,29 @@
 			})(mui);
 			/*-------------------------------------------日期选择结束-----------------------------------------------*/
 			/*-------------------------------------------选择赛制开始-----------------------------------------------*/
+			var rule_type = 0;
 			(function($, doc) {
 				$.init();
 				$.ready(function() {
 					var competitionTypePicker = new $.PopPicker();
 					competitionTypePicker.setData([{
-						value: '0',
+						value: 0,
 						text: 'PK对抗赛'
 					}, {
-						value: '1',
-						text: '个人排位赛'
+						value: 1,
+						text: '单打排位赛'
 					}, {
-						value: '2',
-						text: '个人单循环'
+						value: 2,
+						text: '单打循环赛'
 					}, {
-						value: '3',
-						text: '交叉双打循环赛'
+						value: 3,
+						text: '双打排位赛'
 					}, {
-						value: '4',
-						text: '双打排名赛'
+						value: 4,
+						text: '双打循环赛'
 					}, {
-						value: '5',
-						text: '双打单循环'
+						value: 6,
+						text: '交叉双打积分赛'
 					}]);
 					var showCompetitionType = doc.getElementById('competitionType');
 					var userResult = doc.getElementById('competitionType');
@@ -235,6 +236,7 @@
 						competitionTypePicker.show(function(items) {
 							var str = JSON.stringify(items[0].text);
 							userResult.innerText = str.slice(1,-1);
+							rule_type = items[0].value;
 							//返回 false 可以阻止选择框的关闭
 							//return false;
 						});
@@ -286,15 +288,16 @@
 			})(mui, document); 
 			/*---------------------------------------------增减结束-------------------------------------------------*/
 			/*-------------------------------------------排名条件开始-----------------------------------------------*/
+			var sort_type = 0;
 			(function($, doc) {
 				$.init();
 				$.ready(function() {
 					var rankConditionPicker = new $.PopPicker();
 					rankConditionPicker.setData([{
-						value: '0',
+						value: 0,
 						text: '净胜局'
 					}, {
-						value: '1',
+						value: 1,
 						text: '净胜分'
 					}]);
 					var showRankCondition = doc.getElementById('rankCondition');
@@ -303,6 +306,7 @@
 						rankConditionPicker.show(function(items) {
 							var str = JSON.stringify(items[0].text);
 							userResult.innerText = str.slice(1,-1);
+							sort_type = items[0].value;
 							//返回 false 可以阻止选择框的关闭
 							//return false;
 						});
@@ -311,8 +315,11 @@
 			})(mui, document);
 			/*-------------------------------------------排名条件结束-----------------------------------------------*/
 			/*-------------------------------------------其他领队开始-----------------------------------------------*/
+			var op_leader_id = -1;
+			var invite_team = -1;
 			mui("#otherLeaderButton").on('toggle', '.mui-switch', function(){
 				if(event.detail.isActive){
+					//op_leader = 
 					$("#selectOtherLeader").show();
 				} else {
 					$("#selectOtherLeader").hide();
@@ -320,11 +327,33 @@
 			});
 			/*-------------------------------------------其他领队结束-----------------------------------------------*/
 			/*-------------------------------------------确认触发开始-----------------------------------------------*/
+			var g_UrlBase="";
+            var resultList=[];
+            
 			$(document).ready(function(){
 				$('#confirmCreate button').on('click', function(){
 					var competitionName = $('#competitionName').val().trim();
 					var competitionLocation = $('#competitionLocation').val().trim();
 					if(competitionName != '' && competitionLocation != ''){
+						/*获取已填写的数据*/
+						var sendData = [];
+						sendData.push( { "name": "id_check", 					"value": "1446127366714,0" } );
+						sendData.push( { "name": "smallSchedule.title", 			"value": '"'+competitionName+'"' } );
+						sendData.push( { "name": "smallSchedule.addr", 			"value": competitionLocation } );
+						sendData.push( { "name": "smallSchedule.op_leader_id", 	"value": op_leader_id} );
+						sendData.push( { "name": "smallSchedule.rule_type", 		"value": rule_type } );
+						sendData.push( { "name": "smallSchedule.inning_count", 	"value": round} );
+						sendData.push( { "name": "smallSchedule.win_score", 		"value": score } );
+						sendData.push( { "name": "smallSchedule.max_score", 		"value": topScore } );
+						sendData.push( { "name": "smallSchedule.sort_type", 		"value": sort_type } );
+						sendData.push( { "name": "smallSchedule.invite_team",	"value": invite_team } );
+						try{
+			            		var ind=document.URL.indexOf("htmlAPI");
+			                if ( ind != -1 ) {
+			            			g_UrlBase=document.URL.substring(0,ind);
+			                }
+			            }catch(e){}
+						doSendAjaxRequest('/actions/SmallSchedule.action?insertSmallSchedule', sendData, callBackRight);
 						mui.openWindow({ id:"competitionDetail.html", url:"competitionDetail.html"});
 					}
 					else {
@@ -333,18 +362,42 @@
 					}
 				});
 			});
+			function doSendAjaxRequest(xurl,param,fnCallback){
+                if ( xurl.indexOf('http://') == -1 ) xurl = g_UrlBase+xurl;
+                $.ajax( {
+                    "url":  xurl,
+                    "data": param,
+                    "timeout" : 10000,
+                    "contentType" : "application/x-www-form-urlencoded; charset=utf-8",
+                    "success": function (json) {
+                        try{ fnCallback( json );}catch(e){}
+                    },
+                    "dataType": "json",
+                    "cache": false,
+                    "type": "POST",
+                    "error": function (xhr, error, thrown) {
+                        alert("Fail");
+                    }
+                } );
+            }
+			function callBackRight() {
+				alert("success");
+			}
 			/*-------------------------------------------确认触发结束-----------------------------------------------*/
 			/*-------------------------------------------页面链接切换-----------------------------------------------*/
 			/*mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"myFriendsList.html", url:"myFriendsList.html"});
 			});*/
+			
 			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"selectMultiFriends.html", url:"selectMultiFriends.html"});
-			});
-			/*
+			});/*
+			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
+				mui.openWindow({ id:"selectOneFriend.html", url:"selectOneFriend.html"});
+			});/*
 			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
-			});*/
+			});
 			/*
 			mui("#confirmCreate").on('tap', 'button', function(e){
 				mui.openWindow({ id:"competitionDetail.html", url:"competitionDetail.html"});
