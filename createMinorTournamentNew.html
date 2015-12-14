@@ -334,12 +334,12 @@
 				$('#confirmCreate button').on('click', function(){
 					var competitionName = $('#competitionName').val().trim();
 					var competitionLocation = $('#competitionLocation').val().trim();
-					if(competitionName != '' && competitionLocation != ''){
+					if(competitionName != '' && competitionLocation != '' && multiFriends.length != 0){
 						/*获取已填写的数据*/
 						var sendData = [];
-						sendData.push( { "name": "id_check", 					"value": "1446127366714,0" } );
-						sendData.push( { "name": "smallSchedule.title", 			"value": '"'+competitionName+'"' } );
-						sendData.push( { "name": "smallSchedule.addr", 			"value": competitionLocation } );
+						sendData.push( { "name": "id_check", 					"value": "18801132902,0" } );
+						sendData.push( { "name": "smallSchedule.title", 			"value": "'"+competitionName+"'" } );
+						sendData.push( { "name": "smallSchedule.addr", 			"value": "'"+competitionLocation+"'" } );
 						sendData.push( { "name": "smallSchedule.op_leader_id", 	"value": op_leader_id} );
 						sendData.push( { "name": "smallSchedule.rule_type", 		"value": rule_type } );
 						sendData.push( { "name": "smallSchedule.inning_count", 	"value": round} );
@@ -354,7 +354,6 @@
 			                }
 			            }catch(e){}
 						doSendAjaxRequest('/actions/SmallSchedule.action?insertSmallSchedule', sendData, callBackRight);
-						mui.openWindow({ id:"competitionDetail.html", url:"competitionDetail.html"});
 					}
 					else {
 						mui.alert('您还有未填写的比赛信息!', '温馨提示', function() {});
@@ -370,13 +369,16 @@
                     "timeout" : 10000,
                     "contentType" : "application/x-www-form-urlencoded; charset=utf-8",
                     "success": function (json) {
-                        try{ fnCallback( json );}catch(e){}
+                        try{ 
+                        		fnCallback( json );
+                        		mui.openWindow({ id:"competitionDetail.html", url:"competitionDetail.html"});
+                        }catch(e){}
                     },
                     "dataType": "json",
                     "cache": false,
                     "type": "POST",
                     "error": function (xhr, error, thrown) {
-                        alert("Fail");
+                        mui.alert("由于系统原因,创建失败", "系统提示", function(){});
                     }
                 } );
             }
@@ -384,6 +386,16 @@
 				alert("success");
 			}
 			/*-------------------------------------------确认触发结束-----------------------------------------------*/
+			var multiFriends = [];
+			window.addEventListener('selectMultiFriends',function(event){
+				//通过event.detail可获得传递过来的参数内容
+				alert(event.detail.data);
+				if(multiFriends.length != 0) multiFriends.length = 0;
+				for(var i = 0; i < event.detail.data.length; i++){
+					multiFriends.push(event.detail.data[i]);
+				}
+				alert(multiFriends);
+			});
 			/*-------------------------------------------页面链接切换-----------------------------------------------*/
 			/*mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"myFriendsList.html", url:"myFriendsList.html"});

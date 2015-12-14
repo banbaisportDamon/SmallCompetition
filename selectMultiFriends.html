@@ -32,7 +32,7 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id="back" class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
 			<h1 class="mui-title">选择好友</h1>
 			<a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue mui-disabled">完成</a>
 		</header>
@@ -213,7 +213,9 @@
 		<script type="text/javascript" charset="utf-8">
 			mui.init();
 			/*------------------------------------------初始化好友列表开始-------------------------------------------*/
-			
+			$(document).ready(function(){
+				
+			});
 			/*------------------------------------------初始化好友列表结束-------------------------------------------*/
 			mui.ready(function() {
 				var header = document.querySelector('header.mui-bar');
@@ -227,13 +229,28 @@
 				done.addEventListener('tap', function() {
 					var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
 					var checkedValues = [];
+					var checkedDataValue = [];
 					checkboxArray.forEach(function(box) {
 						if (box.checked) {
 							checkedValues.push(box.parentNode.innerText);
+							checkedDataValue.push(box.parentNode.getAttribute('data-value'));
 						}
 					});
 					if (checkedValues.length > 0) {
-						mui.alert('你选择了: ' + checkedValues);
+						//mui.alert('你选择了: ' + checkedValues);
+						//mui.alert('你选择了: ' + checkedDataValue);
+						var createPage = null;
+						if(!createPage){
+					    		createPage = plus.webview.currentWebview().opener();
+					    		//alert(createPage.id);
+					  	}
+					  	//触发创建页面的selectMultiFriends事件
+					  	mui.fire(createPage,'selectMultiFriends',{
+					    		data:checkedDataValue
+					  	});
+						//打开详情页面 
+						
+						mui.openWindow({url: 'createMinorTournamentNew.html', id: 'createMinorTournamentNew.html'});
 					} else {
 						mui.alert('你没选择任何好友');
 					}
