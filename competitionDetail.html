@@ -86,7 +86,7 @@
 				<td width="5%" height="15px"></td>
 			</tr>
 		</table>
-		
+		<!--
 		<div class="competition mt10 ml5 mr5 pr">
 			<table width="100%" class="pa" style="top:-3px">
 				<tr height="40px">
@@ -209,7 +209,7 @@
 					</tr>
 				</table>
 			</div>
-		</div>
+		</div>-->
 	</div>
 	<script src="js/mui.poppicker.js"></script>
 	<script src="js/mui.picker.min.js"></script>
@@ -254,15 +254,6 @@
 						ht +=		'</tr>';
 						ht +=	'</table>';
 						ht +=	'<hr class="mt20"></hr>';
-/*
-						switch(gameType){
-							case '0':
-								alert("男单");
-								break;
-							default:
-								alert("其他");
-								break;
-						}*/
 						switch (gameType)
 						{
 							case '0':
@@ -341,10 +332,14 @@
 						}
 						ht += '</div>';
 						$('.mui-content').append( ht );
+						mui(".oneplayer").on('tap', 'a', function(e){
+							mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
+						});
 					});
 				}, false);
 			});
 		})(mui, document);
+		/*-------------------------------------------创建比赛结束-----------------------------------------------*/
 		/*-------------------------------------------页面链接切换-----------------------------------------------*/
 		mui(".oneplayer").on('tap', 'a', function(e){
 			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});

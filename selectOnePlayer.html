@@ -38,29 +38,53 @@
 						<a href="#"><img src="img/addplayer.png" width="65px" height="65px"/></a><br />&nbsp;
 					</td>
 					<td width="25%" class="pr">
-						<img src="img/teamleader.png" width="65px" height="65px"/><br />马天宇
+						<img src="img/teamleader.png" width="65px" height="65px" class="headimg selected" /><br /><span>马天宇</span>
 						<img src="img/playerselected.png" width="15px" height="15px" class="pa" style="top:15px; right: 10px;"/>
 					</td>
 					<td width="25%" class="pr">
-						<img src="img/teamleader.png" width="65px" height="65px"/><br />马景涛
-						<img src="img/playerselected.png" width="15px" height="15px" class="pa" style="top:15px; right: 10px;"/>
+						<img src="img/teamleader.png" width="65px" height="65px" class="headimg" /><br /><span>马景涛</span>
 					</td>
 					<td width="25%" class="pr">
-						<img src="img/teamleader.png" width="65px" height="65px"/><br />呵呵哒
-						<img src="img/playerselected.png" width="15px" height="15px" class="pa" style="top:15px; right: 10px;"/>
+						<img src="img/teamleader.png" width="65px" height="65px" class="headimg" /><br /><span>呵呵哒</span>
 					</td>
 				</tr>
-				<tr class="pt10 tc" height="80px">
-					<td width="25%"><img src="img/teamleader.png" width="65px" height="65px"/><br />黄勇刘</td>
-					<td width="25%"><img src="img/teamleader.png" width="65px" height="65px"/><br />马天宇</td>
-					<td width="25%"><img src="img/teamleader.png" width="65px" height="65px"/><br />马景涛</td>
-					<td width="25%"><img src="img/teamleader.png" width="65px" height="65px"/><br />呵呵哒</td>
+				<tr class="pt10 tc" height="120px">
+					<td width="25%" class="pr"><img src="img/teamleader.png" width="65px" height="65px" class="headimg"/><br /><span>黄勇刘</span></td>
+					<td width="25%" class="pr"><img src="img/teamleader.png" width="65px" height="65px" class="headimg"/><br /><span>马天宇</span></td>
+					<td width="25%" class="pr"><img src="img/teamleader.png" width="65px" height="65px" class="headimg"/><br /><span>马景涛</span></td>
+					<td width="25%" class="pr"><img src="img/teamleader.png" width="65px" height="65px" class="headimg"/><br /><span>呵呵哒</span></td>
 				</tr>
 			</table>
 		</div>
+		<div id="seed"><button>种子选手</button></div>
 	</div>
+	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
+		/*------------------------------------------------添加队友开始----------------------------------------------*/
+		
+		/*------------------------------------------------添加队友结束----------------------------------------------*/
+		/*------------------------------------------------选择队员开始----------------------------------------------*/
+		$(document).ready(function(){
+			$('.headimg').click(function(){
+				if(!$(this).hasClass("selected")){
+					$(".selected").each(function(index, element){
+						$($(this).parent().find("img")[1]).remove();
+						$(this).removeClass("selected");
+					});
+					$(this).parent().append('<img src="img/playerselected.png" width="15px" height="15px" class="pa" style="top:15px; right: 10px;"/>');
+					$(this).addClass("selected");
+				} else {
+					$($(this).parent().find("img")[1]).remove();
+					$(this).removeClass("selected");
+				}
+			});
+		});
+		/*------------------------------------------------选择队员结束----------------------------------------------*/
+		/*--------------------------------------------------页面链接------------------------------------------------*/
 		mui("#addplayer").on('tap', 'a', function(e){
+			mui.openWindow({ id:"selectMultiFriends.html", url:"selectMultiFriends.html"});
+		});
+		mui("#seed").on('tap', 'button', function(e){
 			mui.openWindow({ id:"singlesRound.html", url:"singlesRound.html"});
 		});
 	</script>
