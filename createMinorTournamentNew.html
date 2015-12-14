@@ -386,6 +386,7 @@
 				alert("success");
 			}
 			/*-------------------------------------------确认触发结束-----------------------------------------------*/
+			/*---------------------------自定义事件1——接收selectMultiFriends.html数据开始----------------------------*/
 			var multiFriends = [];
 			window.addEventListener('selectMultiFriends',function(event){
 				//通过event.detail可获得传递过来的参数内容
@@ -396,6 +397,16 @@
 				}
 				alert(multiFriends);
 			});
+			/*---------------------------自定义事件1——接收selectMultiFriends.html数据结束----------------------------*/
+			/*---------------------------自定义事件2——接收selectOneFriends.html数据开始----------------------------*/
+			var op_leader;
+			window.addEventListener('selectOneFriend',function(event){
+				//通过event.detail可获得传递过来的参数内容
+				alert(event.detail.data);
+				//op_leader = event.detail.data;
+				//alert(op_leader);
+			});
+			/*---------------------------自定义事件2——接收selectOneFriends.html数据结束----------------------------*/
 			/*-------------------------------------------页面链接切换-----------------------------------------------*/
 			/*mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"myFriendsList.html", url:"myFriendsList.html"});
@@ -403,10 +414,11 @@
 			
 			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"selectMultiFriends.html", url:"selectMultiFriends.html"});
-			});/*
-			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
+			});
+			mui("#selectOtherLeader").on('tap', 'a', function(e){
 				mui.openWindow({ id:"selectOneFriend.html", url:"selectOneFriend.html"});
-			});/*
+			});
+			/*
 			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
 				mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
 			});
