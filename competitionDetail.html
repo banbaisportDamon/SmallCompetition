@@ -8,6 +8,8 @@
 		
     <script src="js/mui.min.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
+    <link href="css/mui.picker.min.css" rel="stylesheet" />
+	<link href="css/mui.poppicker.css" rel="stylesheet" />
     <link href="css/base.css" rel="stylesheet"/>
     <!--
     <script type="text/javascript" charset="utf-8">
@@ -51,14 +53,16 @@
 			background-repeat: no-repeat;
 			background-position: center;
 			background-size: 40px 35px;
+			color:#fff;
 		}
 		hr {border: 0.5px solid #ccc;}
+		
     </style>
 </head>
 <body>
 	<header class="mui-navbar-inner mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="createMinorTournamentNew.html"></a>
-		<span id="menu" class="mui-action-menu mui-icon mui-icon-plusempty mui-pull-right"></span>
+		<span id="createGame" class="mui-action-menu mui-icon mui-icon-plusempty mui-pull-right"></span>
 		<h1 class="mui-center mui-title tc">对阵详情</h1>
 	</header>
 	<div class="mui-content">
@@ -207,10 +211,136 @@
 			</div>
 		</div>
 	</div>
+	<script src="js/mui.poppicker.js"></script>
+	<script src="js/mui.picker.min.js"></script>
+	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
-		mui(".oneplayer").on('tap', 'a', function(e){
-				mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
+	/*-------------------------------------------创建比赛开始-----------------------------------------------*/
+		(function($, doc) {
+			$.init();
+			$.ready(function() {
+				//普通示例
+				var typePicker = new $.PopPicker();
+				typePicker.setData([{
+					value: 0,
+					text: '男单'
+				}, {
+					value: 1,
+					text: '男双'
+				}, {
+					value: 2,
+					text: '女单'
+				}, {
+					value: 3,
+					text: '女双'
+				}, {
+					value: 4,
+					text: '混双'
+				}]);
+				var showUserPickerButton = doc.getElementById('createGame');
+				//var userResult = doc.getElementById('userResult');
+				showUserPickerButton.addEventListener('tap', function(event) {
+					// add game
+					typePicker.show(function(items) {
+						var gameType = JSON.stringify(items[0].value);
+						var gameTypeName = JSON.stringify(items[0].text);
+						var ht = '';
+							ht += '<div class="competition mt10 ml5 mr5 pr">';
+							ht += 	'<table width="100%" class="pa" style="top:-3px">';
+							ht += 		'<tr height="40px">';
+							ht += 			'<td width="40%" class="tr f1d5">0</td>';
+							ht +=			'<td width="20%" class="tc typebackground">'+gameTypeName+'</td>';
+							ht +=			'<td width="40%" class="tl f1d5">0</td>';
+							ht +=		'</tr>';
+							ht +=	'</table>';
+							ht +=	'<hr class="mt20"></hr>';
+								
+						siwtch(gameType){
+							case 0:
+							case 2:
+								
+								ht +=	'<div class="competitionInfo mt20">';
+								ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
+								ht +=		'<table width="100%">';
+								ht +=			'<tr>';
+								ht +=				'<td width="40%" class="tc oneplayer">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br />运动员1';
+								ht +=				'</td>';
+								ht +=				'<td width="20%" class="tc">VS</td>';
+								ht +=				'<td width="40%" class="tc oneplayer">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br />运动员2';
+								ht +=				'</td>';
+								ht +=			'</tr>';
+								ht +=			'<tr>';
+								ht +=				'<td width="40%" class="tr">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="40%" class="tl">0</td>';
+								ht ++			'</tr>';
+								ht +=			'<tr>';
+								ht +=				'<td width="40%" class="tr">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="40%" class="tl">0</td>';
+								ht +=			'</tr>';
+								ht +=			'<tr>';
+								ht +=				'<td width="40%" class="tr">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="40%" class="tl">0</td>';
+								ht +=			'</tr>';
+								ht +	=		'</table>';
+								ht +=	'</div>';
+								break;
+							case 1:
+							case 3:
+							case 4:
+								ht +=	'<div class="competitionInfo mt20">';
+								ht +=		'<table width="100%">';
+								ht +=			'<tr>';
+								ht +=				'<td width="20%" class="tc">';
+								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员1';
+								ht +=				'</td>';
+								ht +=				'<td width="20%" class="tc">';
+								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员2';
+								ht +=				'</td>';
+								ht +=				'<td width="20%" class="tc">VS</td>';
+								ht +=				'<td width="20%" class="tc" colspan="2">';
+								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员3';
+								ht +=				'</td>';
+								ht +=				'<td width="20%" class="tc">';
+								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员4';
+								ht +=				'</td>';
+								ht +=			'</tr>';
+								ht +=			'<tr>';
+								ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
+								ht +=			'</tr>';
+								ht +=			'<tr>';
+								ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
+								ht +=			'</tr>';
+								ht +=			'<tr>';
+								ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
+								ht +=			'</tr>';
+								ht +=		'</table>';
+								ht +=	'</div>';
+								break;
+						}
+						ht += '</div>';
+						jQuery(".mui-content")[0].append(ht);
+						//userResult.innerText = JSON.stringify(items[0]);
+						//返回 false 可以阻止选择框的关闭
+						//return false;
+					});
+				}, false);
 			});
+		})(mui, document);
+		/*-------------------------------------------页面链接切换-----------------------------------------------*/
+		mui(".oneplayer").on('tap', 'a', function(e){
+			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
+		});
 	</script>
 </body>
 </html>

@@ -144,6 +144,9 @@
 			<div id="confirmCreate" class="mui-content-padded pl30 pr30">
 				<button type="button" class="mui-btn mui-btn-block">确定</button>
 			</div>
+			<div id="debugdiv">
+				<button id="debug">创建</button>
+			</div>
 		</div>
 		<!-------------------------------------------主页面结束----------------------------------------------->
 		<script src="js/mui.poppicker.js"></script>
@@ -417,6 +420,9 @@
 			});
 			mui("#selectOtherLeader").on('tap', 'a', function(e){
 				mui.openWindow({ id:"selectOneFriend.html", url:"selectOneFriend.html"});
+			});
+			mui("#debugdiv").on('tap', '#debug', function(e){
+				mui.openWindow({ id:"competitionDetail.html", url:"competitionDetail.html"});
 			});
 			/*
 			mui("#selectTournamentPlayers").on('tap', 'a', function(e){
