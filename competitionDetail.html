@@ -216,11 +216,11 @@
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
 	/*-------------------------------------------创建比赛开始-----------------------------------------------*/
-		(function($, doc) {
-			$.init();
-			$.ready(function() {
+		(function(m, doc) {
+			m.init();
+			m.ready(function() {
 				//普通示例
-				var typePicker = new $.PopPicker();
+				var typePicker = new m.PopPicker();
 				typePicker.setData([{
 					value: 0,
 					text: '男单'
@@ -245,20 +245,28 @@
 						var gameType = JSON.stringify(items[0].value);
 						var gameTypeName = JSON.stringify(items[0].text);
 						var ht = '';
-							ht += '<div class="competition mt10 ml5 mr5 pr">';
-							ht += 	'<table width="100%" class="pa" style="top:-3px">';
-							ht += 		'<tr height="40px">';
-							ht += 			'<td width="40%" class="tr f1d5">0</td>';
-							ht +=			'<td width="20%" class="tc typebackground">'+gameTypeName+'</td>';
-							ht +=			'<td width="40%" class="tl f1d5">0</td>';
-							ht +=		'</tr>';
-							ht +=	'</table>';
-							ht +=	'<hr class="mt20"></hr>';
-								
-						siwtch(gameType){
-							case 0:
-							case 2:
-								
+						ht += '<div class="competition mt10 ml5 mr5 pr">';
+						ht += 	'<table width="100%" class="pa" style="top:-3px">';
+						ht += 		'<tr height="40px">';
+						ht += 			'<td width="40%" class="tr f1d5">0</td>';
+						ht +=			'<td width="20%" class="tc typebackground">'+gameTypeName+'</td>';
+						ht +=			'<td width="40%" class="tl f1d5">0</td>';
+						ht +=		'</tr>';
+						ht +=	'</table>';
+						ht +=	'<hr class="mt20"></hr>';
+/*
+						switch(gameType){
+							case '0':
+								alert("男单");
+								break;
+							default:
+								alert("其他");
+								break;
+						}*/
+						switch (gameType)
+						{
+							case '0':
+							case '2':
 								ht +=	'<div class="competitionInfo mt20">';
 								ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
 								ht +=		'<table width="100%">';
@@ -275,24 +283,25 @@
 								ht +=				'<td width="40%" class="tr">0</td>';
 								ht +=				'<td width="20%" class="tc">:</td>';
 								ht +=				'<td width="40%" class="tl">0</td>';
-								ht ++			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="40%" class="tr">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="40%" class="tl">0</td>';
 								ht +=			'</tr>';
 								ht +=			'<tr>';
 								ht +=				'<td width="40%" class="tr">0</td>';
 								ht +=				'<td width="20%" class="tc">:</td>';
 								ht +=				'<td width="40%" class="tl">0</td>';
 								ht +=			'</tr>';
-								ht +	=		'</table>';
+								ht +=			'<tr>';
+								ht +=				'<td width="40%" class="tr">0</td>';
+								ht +=				'<td width="20%" class="tc">:</td>';
+								ht +=				'<td width="40%" class="tl">0</td>';
+								ht +=			'</tr>';
+								ht +=		'</table>';
 								ht +=	'</div>';
 								break;
-							case 1:
-							case 3:
-							case 4:
+							case '1':
+							case '3':
+							case '4':
 								ht +=	'<div class="competitionInfo mt20">';
+								ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
 								ht +=		'<table width="100%">';
 								ht +=			'<tr>';
 								ht +=				'<td width="20%" class="tc">';
@@ -327,12 +336,11 @@
 								ht +=		'</table>';
 								ht +=	'</div>';
 								break;
+							default:
+								break;
 						}
 						ht += '</div>';
-						jQuery(".mui-content")[0].append(ht);
-						//userResult.innerText = JSON.stringify(items[0]);
-						//返回 false 可以阻止选择框的关闭
-						//return false;
+						$('.mui-content').append( ht );
 					});
 				}, false);
 			});
