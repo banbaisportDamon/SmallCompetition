@@ -66,6 +66,12 @@
 				<input type="search" class="mui-input-clear" placeholder="搜索">
 			</div>
 		</div>
+		<div class="competitionList">
+			<div class="mui-loading">
+				<div class="mui-spinner">
+				</div>
+			</div>
+		</div>
 		<!--
 		<div class="tournament">
 			<div class="tournament-date tc mb10" height="40px">首届清华大学校友羽毛球联谊赛</div>
@@ -113,14 +119,14 @@
        var resultList=[];
        
        $(document).ready(function() {
-           result_id=getUrlParam(document.URL,"id");
+           /*result_id=getUrlParam(document.URL,"id");
            
            try{
              var ind=document.URL.indexOf("htmlAPI");
              if ( ind != -1 ) {								//if exist htmlAPI
                g_UrlBase=document.URL.substring(0,ind);		//url before htmlAPI
              }
-           }catch(e){}
+           }catch(e){}*/
            getResult();
        } );
         
@@ -161,7 +167,7 @@
 				ht +=		'</div>';
 				ht +=	'</div>';
             }
-            $(".mui-content").append( ht );
+            $(".competitionList").html( ht );
            }catch(e){}
         }
 
