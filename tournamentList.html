@@ -66,7 +66,7 @@
 				<input type="search" class="mui-input-clear" placeholder="搜索">
 			</div>
 		</div>
-		
+		<!--
 		<div class="tournament">
 			<div class="tournament-date tc mb10" height="40px">首届清华大学校友羽毛球联谊赛</div>
 			<hr></hr>
@@ -102,17 +102,19 @@
 					</tr>
 				</table>
 			</div>
-		</div>
+		</div>-->
 	</div>
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
 	/*---------------------------------加载比赛信息-----------------------------------------*/
        //var result_id=1446084452513;
-       var g_UrlBase="";
+       var id_check = "1439286113287,0"
+       var g_UrlBase="http://192.168.1.107:8081";
        var resultList=[];
        
        $(document).ready(function() {
-           //result_id=getUrlParam(document.URL,"id");
+           result_id=getUrlParam(document.URL,"id");
+           
            try{
              var ind=document.URL.indexOf("htmlAPI");
              if ( ind != -1 ) {								//if exist htmlAPI
@@ -124,6 +126,7 @@
         
         function getResult(){
            	var aoData=[];
+           	aoData.push( { "name":"id_check","value": id_check} );
            	aoData.push( { "name":"smallSchedule.create_user", "value":-1 } );
            	aoData.push( { "name":"smallSchedule.op_leader_id","value":-1 } );
            	aoData.push( { "name":"smallSchedule.rule_type", "value":-1 } );
@@ -133,44 +136,32 @@
 
         function getCompetitionRankListCallback(obj){
            try{
-           	alert("YES");
-           	/*
-            resultList=obj.data;
+           	//alert("YES");
+            resultList=obj.aaData;
             var ht='';
-
-            //set competition name
-            ht = resultList.schedule_name;
-            $("#currentCompetitionName").html( ht );
-
-            // set team name & img
-            ht = '<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+resultList.team_1_img_url+'" width="80px" height="80px" style="border-radius:50%" /><br />'+resultList.team_1_name;
-            $("#firstTeam").html( ht );
-            ht = '<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+resultList.team_2_img_url+'" width="80px" height="80px" style="border-radius:50%" /><br />'+resultList.team_2_name;
-            $("#secondTeam").html( ht );
-
-            // set court
-            ht = resultList.area_code;
-            $("#centerInfo").text( ht );
-
-            // set scores
-            ht = resultList.score_1;
-            $("#score1").text( ht );
-            ht = resultList.score_2;
-            $("#score2").text( ht );
-
-            // set different type
-            ht = '';
-            for( var i=0; i<resultList.scenes.length; i++){
-                ht += '<div class="againstDetailInfo mt20 pr">';
-                ht +=   '<table class="pr" width="100%">';
-                ht +=     '<thead>';
-                ht +=       '<tr height="30px">';
-                ht +=         '<td width="40%"></td>';
-                ht +=         '<td  width="20%" class="competitionType centerCol f1d2" style="background-color: #fff" rowspan=2>'+resultList.scenes[i].competition_type+'</td>';
-                ht +=         '<td width="40%"></td>';
-                ht += '</tbody></table></div>';
+            var ruleType = ['PK对抗赛','单打排位赛','单打循环赛','双打排位赛','双打循环赛','交叉双打积分赛'];
+            for(var i = 0; i < resultList.length; i++){
+            		ht +=	'<div class="tournament">';
+            		ht +=		'<div class="tournament-date tc mb10" height="40px">'+resultList[i].title+'</div>';
+            		ht += 		'<hr></hr>';
+            		ht +=		'<div class="pl10 pr10">';
+            		ht +=			'<table width="100%" class="tl">';
+				ht +=				'<tr>';
+				ht +=					'<td class="competitionLogo" width="80px" rowspan=3><img src="img/VS_background_01.png" width="60px" height="60px"/></td>';
+				var d = new Date(resultList[i].create_time);     
+				ht +=					'<td class="f0d8"><img src="img/clock.png" width="10px" height="10px">&nbsp;&nbsp;时间：'+formatDate(d)+'</td>';
+				ht +=				'</tr>';
+				ht +=				'<tr>';
+				ht +=					'<td class="f0d8"><img src="img/schedule_01.png" width="10px" height="14px"/>&nbsp;&nbsp;赛制：'+ruleType[resultList[i].rule_type]+'</td>';
+				ht +=				'</tr>';
+				ht +=				'<tr>';
+				ht +=					'<td class="f0d8"><img src="img/location_02.png" width="10px" height="14px" />&nbsp;&nbsp;地点：'+resultList[i].addr+'</td>';
+				ht +=				'</tr>';
+				ht +=			'</table>';
+				ht +=		'</div>';
+				ht +=	'</div>';
             }
-            $("#againstScore").after( ht );*/
+            $(".mui-content").append( ht );
            }catch(e){}
         }
 
@@ -208,6 +199,14 @@
                 return "";
            }
         }
+        function   formatDate(now)   {     
+			var   year=now.getFullYear();     
+			var   month=now.getMonth()+1;     
+			var   date=now.getDate();     
+			var   hour=now.getHours();     
+			var   minute=now.getMinutes();     
+			return   year+"-"+month+"-"+date+" "+hour+":"+minute;     
+		}     
 		/*--------------------------------------------加入父webview开始---------------------------------------------*/
 		var createItem1 = document.getElementById("createMinorTournamentNew");
 		var parentWebview = null;
