@@ -252,7 +252,12 @@
 			var score = 21;
 			var topScore = 31;
 			(function($, doc) {
-				$.init();
+				mui.init({
+				  preloadPages:[{
+				    		id:'competitionDetail.html',
+				    		url:'competitionDetail.html'           
+				  	}]
+				});
 				$.ready(function() {
 					var item3 = document.getElementById('normalScore');
 					mui('.mui-table-view-cell').on('tap', 'span', function(e) {
@@ -392,6 +397,13 @@
             }
 			function callBackRight(json) {
 				if(json.status == true){
+					var competitionid = json.msg;
+					var detailPage = null;
+  					detailPage = plus.webview.getWebviewById('competitionDetail.html');
+					//触发详情页面的initialize事件
+					mui.fire(detailPage, 'myinit', {
+						id:competitionid
+					});
 					mui.openWindow({ id:"competitionDetail.html", url:"competitionDetail.html"});
 				} else {
 					mui.alert("创建失败,请重试","系统提示",function(){});

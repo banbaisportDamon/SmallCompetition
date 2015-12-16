@@ -61,7 +61,7 @@
 </head>
 <body>
 	<header class="mui-navbar-inner mui-bar mui-bar-nav">
-		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="createMinorTournamentNew.html"></a>
+		<a class="mui-icon mui-icon-left-nav mui-pull-left" href="#"></a>
 		<span id="createGame" class="mui-action-menu mui-icon mui-icon-plusempty mui-pull-right"></span>
 		<h1 class="mui-center mui-title tc">对阵详情</h1>
 	</header>
@@ -85,6 +85,9 @@
 				<td width="5%" height="15px"></td>
 			</tr>
 		</table>
+		<div class="matches">
+			
+		</div>
 	<!--	
 		<div class="competition mt10 ml5 mr5 pr">
 			<img src="img/during.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />
@@ -192,11 +195,17 @@
    		var id = -1;
    		var playersInfo = [];
    		
+   		//获取从首页和创建比赛的页面传来的id号
    		window.addEventListener('myinit',function(event){
 			//通过event.detail可获得传递过来的参数内容
-			id = event.detail.id;
-			getResult();
-			alert(id);
+			if(id != event.detail.id){
+				id = event.detail.id;
+				$(".matches").html('');
+				//alert(id);
+				getResult();
+			} else {
+				//
+			}
 		});
     
         function getResult(){
@@ -210,6 +219,7 @@
            try{
             resultList=obj.body;
             //store the players info
+            if(playersInfo.length != 0) playersInfo.length = 0;
             for(var i = 0; i < resultList.playerList.length; i++){
             		playersInfo.push({"player_name": resultList.playerList[i].player_name, "img_url": resultList.playerList[i].img_url, "player_id": resultList.playerList[i].player_id,"seeded_player": resultList.playerList[i].seeded_player});
             }
@@ -334,8 +344,8 @@
 								ht +=		'</table>';
 								ht +=		'<hr class="mt10"></hr>';
 								ht +=		'<div class="mui-button-row">';
-								ht +=			'<button type="button" class="mui-btn mui-btn-green" onclick="return false;">观赛</button>&nbsp;&nbsp;';
-								ht +=			'<button type="button" class="mui-btn mui-btn-danger" onclick="return false;">执裁</button>';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger">执裁</button>';
 								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
@@ -346,17 +356,17 @@
 								ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
 								ht +=		'<table width="100%">';
 								ht +=			'<tr>';
-								ht +=				'<td width="20%" class="tc">';
+								ht +=				'<td width="20%" class="tc oneplayer">';
 								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员1';
 								ht +=				'</td>';
-								ht +=				'<td width="20%" class="tc">';
+								ht +=				'<td width="20%" class="tc oneplayer">';
 								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员2';
 								ht +=				'</td>';
 								ht +=				'<td width="20%" class="tc">VS</td>';
-								ht +=				'<td width="20%" class="tc" colspan="2">';
+								ht +=				'<td width="20%" class="tc oneplayer" colspan="2">';
 								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员3';
 								ht +=				'</td>';
-								ht +=				'<td width="20%" class="tc">';
+								ht +=				'<td width="20%" class="tc oneplayer">';
 								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员4';
 								ht +=				'</td>';
 								ht +=			'</tr>';
@@ -387,30 +397,44 @@
 								break;
 						}
 						ht += '</div>';
-						$('.mui-content').append( ht );
-						mui(".oneplayer").on('tap', 'a', function(e){
-							var detailPage = null;
-							var id = this.getAttribute('id');
-						  	//获得详情页面
-						  	if(!detailPage){
-						    		detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
-						  	}
-						  	//触发详情页面的newsId事件
-						  	mui.fire(detailPage,'selectedPlayer',{
-						    		playersInfo: playersInfo 
-						  	});
-						  	alert(playersInfo.join());
-							//打开详情页面          
-							mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
-						});
+						$('.matches').append( ht );
 					});
 				}, false);
 			});
 		})(mui, document);
 		/*-------------------------------------------创建比赛结束-----------------------------------------------*/
+		/*----------------------------------向选择上场运动员页面发送数据开始--------------------------------------*/
+		$(document).on("click", ".oneplayer a", function(e){
+		//mui(".oneplayer").on('tap', 'a', function(e){
+			var detailPage = null;
+			var id = this.getAttribute('id');
+		  	if(!detailPage){
+		    		detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
+		  	}
+		  	mui.fire(detailPage,'selectedPlayer',{
+		    		playersInfo: playersInfo 
+		  	});
+			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
+		});
+		/*----------------------------------向选择上场运动员页面发送数据结束--------------------------------------*/	
 		/*-------------------------------------------页面链接切换-----------------------------------------------*/
 		mui(".oneplayer").on('tap', 'a', function(e){
 			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
+		});
+		mui("header").on("tap", 'a', function(e){
+			mui.openWindow({ 
+				id:"index.html", 
+				url:"index.html",
+				createNew:false,
+				show: {
+					aniShow: 'slide-in-left',
+					uration: 200
+                },
+                waiting: {
+                    autoShow: true, //自动显示等待框
+                    title: '正在加载...', //等待对话框上显示的提示内容
+                }
+			});
 		});
 	</script>
 </body>

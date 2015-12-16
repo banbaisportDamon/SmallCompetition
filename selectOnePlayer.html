@@ -60,6 +60,12 @@
 	</div>
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
+		mui.init({
+		  	preloadPages:[{
+		    		id:'selectMoreFriends.html',
+		    		url:'selectMoreFriends.html'           
+			}]
+		});
 		/*------------------------------------------------添加队友开始----------------------------------------------*/
 		
 		/*------------------------------------------------添加队友结束----------------------------------------------*/
@@ -78,6 +84,23 @@
 			}
 		});
 		/*------------------------------------------------选择队员结束----------------------------------------------*/
+		/*------------------------------------------------统计选择开始----------------------------------------------*/
+		/*
+		mui('.mui-indexed-list-inner').on('change', 'input', function() {
+			var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
+			var value = count ? "完成(" + count + ")" : "完成";
+			done.innerHTML = value;
+			if (count) {
+				if (done.classList.contains("mui-disabled")) {
+					done.classList.remove("mui-disabled");
+				}
+			} else {
+				if (!done.classList.contains("mui-disabled")) {
+					done.classList.add("mui-disabled");
+				}
+			}
+		});
+		/*------------------------------------------------统计选择结束----------------------------------------------*/
 		/*---------------------------自定义事件1——接收competitionDetail.html数据开始--------------------------------*/
 		var playersInfo = [];
 		window.addEventListener('selectedPlayer',function(event){
@@ -114,6 +137,20 @@
 			$(".headimgs").html( ht );
 		});
 		/*---------------------------自定义事件1——接收competitionDetail.html数据结束--------------------------------*/
+		/*-----------------------------向selectMoreFriends.html发送已有好友数据开始---------------------------------*/
+		$(document).on('click', '#addplayer a',function(){
+			var detailPage = null;
+		  	//获得详情页面
+		  	if(!detailPage){
+		    		detailPage = plus.webview.getWebviewById('selectMoreFriends.html');
+		  	}
+		  	//触发详情页面的newsId事件
+		  	mui.fire(detailPage,'selectedFriends',{
+		    		playersInfo:playersInfo
+		  	});
+			mui.openWindow({ id:"selectMoreFriends.html", url:"selectMoreFriends.html"});
+		});
+		/*-----------------------------向selectMoreFriends.html发送已有好友数据结束---------------------------------*/
 		/*---------------------------自定义事件2——接收selectMoreFriends.html数据开始--------------------------------*/
 		var multiFriendsId = [];
 		var multiFriendsName = [];
@@ -130,9 +167,6 @@
 		});
 		/*---------------------------自定义事件1——接收selectMoreFriends.html数据结束--------------------------------*/
 		/*--------------------------------------------------页面链接------------------------------------------------*/
-		$(document).on('click', '#addplayer a',function(){
-			mui.openWindow({ id:"selectMoreFriends.html", url:"selectMoreFriends.html"});
-		});
 		mui("#seed").on('tap', 'button', function(e){
 			mui.openWindow({ id:"singlesRound.html", url:"singlesRound.html"});
 		});

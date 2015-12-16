@@ -247,9 +247,9 @@
 	            var ht=	'<div class="mui-indexed-list-empty-alert">没有数据</div>';
 	            ht +=	'<ul class="mui-table-view">';
 	            for(var i = 0; i < resultList.length; i++){
-	            		ht +=  '<li data-group="A" class="mui-table-view-divider mui-indexed-list-group">'+resultList[i].letter+'</li>';
+	            		ht +=  '<li data-group="'+resultList[i].letter+'" class="mui-table-view-divider mui-indexed-list-group">'+resultList[i].letter+'</li>';
 	            		for(var j = 0; j < resultList[i].list.length; j++){	
-						ht += 	'<li data-value="'+resultList[i].list[j].friend_id+'" data-tags="'+resultList[i].list[j].add_time+'" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">';
+						ht += 	'<li data-value="'+resultList[i].list[j].friend_id+'" data-tags="'+resultList[i].list[j].friend_img+'" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">';
 						ht +=	'<input type="checkbox" />'+resultList[i].list[j].friend_name+'</li>';
 	            		}
 				}
@@ -293,6 +293,19 @@
 	           }
 	        }
 			/*------------------------------------------初始化好友列表结束-------------------------------------------*/
+			/*------------------------------------------标记已选中好友开始-------------------------------------------*/
+			var playersInfo = [];
+			window.addEventListener('selectedFriends',function(event){
+				//获得事件参数
+				playersInfo = event.detail.playersInfo;
+				// 标记
+				for(var i = 0; i < playersInfo.length; i++){
+					var condition = "li[data-value="+playersInfo[i].player_id+"]";
+					$(condition).find("input").attr("checked",true);
+				}
+				//根据id向服务器请求新闻详情
+			});
+			/*------------------------------------------标记以选中好友结束-------------------------------------------*/
 			/*-----------------------------------------处理选中以及发送开始------------------------------------------*/
 			mui.ready(function() {
 				var header = document.querySelector('header.mui-bar');
@@ -305,11 +318,10 @@
 				//done event
 				done.addEventListener('tap', function() {
 					var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
-					var checkedValues = [];
-					var checkedDataValue = [];
+					var selecedFriendsNew = [];
 					checkboxArray.forEach(function(box) {
 						if (box.checked) {
-							checkedValues.push(box.parentNode.innerText);
+							selectedFriendsNew.push({"":box.parentNode.innerText});
 							checkedDataValue.push(box.parentNode.getAttribute('data-value'));
 						}
 					});
