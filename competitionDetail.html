@@ -191,9 +191,8 @@
 	/*-------------------------------------------初始化单项开始---------------------------------------------*/
 		var id_check = "1439286113287,0";
    		var g_UrlBase="http://192.168.199.206:8081";
-   		var resultList=[];
    		var id = -1;
-   		var playersInfo = [];
+   		var wholeDetail = [];
    		
    		//获取从首页和创建比赛的页面传来的id号
    		window.addEventListener('myinit',function(event){
@@ -204,7 +203,7 @@
 				//alert(id);
 				getResult();
 			} else {
-				//
+				getResult();
 			}
 		});
     
@@ -217,17 +216,7 @@
 
         function callbackOne(obj){
            try{
-            resultList=obj.body;
-            //store the players info
-            if(playersInfo.length != 0) playersInfo.length = 0;
-            for(var i = 0; i < resultList.playerList.length; i++){
-            		playersInfo.push({"player_name": resultList.playerList[i].player_name, "img_url": resultList.playerList[i].img_url, "player_id": resultList.playerList[i].player_id,"seeded_player": resultList.playerList[i].seeded_player});
-            }
-            var ht = '';
-			if(resultList.matchList.length != 0){
-				//...
-			}
-            //$(".mui-indexed-list-inner").html(ht);
+           	wholeDetail = obj.body;
            }catch(e){}
         }
 
@@ -405,14 +394,12 @@
 		/*-------------------------------------------创建比赛结束-----------------------------------------------*/
 		/*----------------------------------向选择上场运动员页面发送数据开始--------------------------------------*/
 		$(document).on("click", ".oneplayer a", function(e){
-		//mui(".oneplayer").on('tap', 'a', function(e){
 			var detailPage = null;
-			var id = this.getAttribute('id');
 		  	if(!detailPage){
 		    		detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
 		  	}
 		  	mui.fire(detailPage,'selectedPlayer',{
-		    		playersInfo: playersInfo 
+		  		wholeDetail: wholeDetail
 		  	});
 			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
 		});

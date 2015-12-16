@@ -102,19 +102,15 @@
 		});
 		/*------------------------------------------------统计选择结束----------------------------------------------*/
 		/*---------------------------自定义事件1——接收competitionDetail.html数据开始--------------------------------*/
-		var playersInfo = [];
+		var wholeDetail = [];
 		window.addEventListener('selectedPlayer',function(event){
-			//通过event.detail可获得传递过来的参数内容
-			if(playersInfo.length != 0) playersInfo.length = 0; 
-			for(var i = 0; i < event.detail.playersInfo.length; i++){
-				playersInfo.push(event.detail.playersInfo[i]);
-			}
+			wholeDetail = event.detail.wholeDetail;
+			
 			//初始化头像
-			var total = playersInfo.length + 1;
-			var num = (playersInfo.length + 1)/4;
+			var total = wholeDetail.playerList.length + 1;
+			var num = (wholeDetail.playerList.length + 1)/4;
 			var i = 0;
 			var index = 0;
-			
 			var ht = '';
 			ht +=	'<table width="100%">';
 			for(; i < num; i++){
@@ -125,8 +121,8 @@
 					} else {
 						ht += '<td width="25%" class="pr">';
 						if(index < total){
-							ht +=	'<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+playersInfo[index-1].img_url+'" width="65px" height="65px" class="headimg" style="border-radius:50%"/><br />';
-							ht +=	'<span data-value="'+playersInfo[index-1].player_id+'">'+playersInfo[index-1].player_name+'</span>';
+							ht +=	'<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+wholeDetail.playerList[index-1].img_url+'" width="65px" height="65px" class="headimg" style="border-radius:50%"/><br />';
+							ht +=	'<span data-value="'+wholeDetail.playerList[index-1].player_id+'">'+wholeDetail.playerList[index-1].player_name+'</span>';
 						}
 						ht += '</td>';
 					}
@@ -140,18 +136,17 @@
 		/*-----------------------------向selectMoreFriends.html发送已有好友数据开始---------------------------------*/
 		$(document).on('click', '#addplayer a',function(){
 			var detailPage = null;
-		  	//获得详情页面
 		  	if(!detailPage){
 		    		detailPage = plus.webview.getWebviewById('selectMoreFriends.html');
 		  	}
-		  	//触发详情页面的newsId事件
 		  	mui.fire(detailPage,'selectedFriends',{
-		    		playersInfo:playersInfo
+				wholeDetail:wholeDetail
 		  	});
 			mui.openWindow({ id:"selectMoreFriends.html", url:"selectMoreFriends.html"});
 		});
 		/*-----------------------------向selectMoreFriends.html发送已有好友数据结束---------------------------------*/
 		/*---------------------------自定义事件2——接收selectMoreFriends.html数据开始--------------------------------*/
+		/*
 		var multiFriendsId = [];
 		var multiFriendsName = [];
 		window.addEventListener('selectMoreFriends',function(event){
@@ -163,7 +158,6 @@
 				multiFriendsName.push(event.detail.name[i]);
 			}
 			//alert(multiFriendsId.join());
-			//alert(multiFriendsName.join());
 		});
 		/*---------------------------自定义事件1——接收selectMoreFriends.html数据结束--------------------------------*/
 		/*--------------------------------------------------页面链接------------------------------------------------*/

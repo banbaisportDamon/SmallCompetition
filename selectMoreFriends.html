@@ -236,26 +236,26 @@
         
 	        function getResult(){
 	           	var aoData=[];
-	           	aoData.push( { "name":"id_check","value": id_check} );
+	           	aoData.push( { "name":"id_check","value": id_check } );
 	           	aoData.push( { "name":"type", "value": "includedMe" } );
 				doSendAjaxRequest("/actions/Member.action?getMyFriendList",aoData,getCompetitionRankListCallback);
 	        }
 
 	        function getCompetitionRankListCallback(obj){
-	           try{
-	            resultList=obj.aaData;
-	            var ht=	'<div class="mui-indexed-list-empty-alert">没有数据</div>';
-	            ht +=	'<ul class="mui-table-view">';
-	            for(var i = 0; i < resultList.length; i++){
-	            		ht +=  '<li data-group="'+resultList[i].letter+'" class="mui-table-view-divider mui-indexed-list-group">'+resultList[i].letter+'</li>';
-	            		for(var j = 0; j < resultList[i].list.length; j++){	
-						ht += 	'<li data-value="'+resultList[i].list[j].friend_id+'" data-tags="'+resultList[i].list[j].friend_img+'" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">';
-						ht +=	'<input type="checkbox" />'+resultList[i].list[j].friend_name+'</li>';
-	            		}
-				}
-	            ht += '</ul>';
-	            $(".mui-indexed-list-inner").html(ht);
-	           }catch(e){}
+	        		try{
+	            		resultList=obj.aaData;
+	            		var ht=	'<div class="mui-indexed-list-empty-alert">没有数据</div>';
+	            		ht +=	'<ul class="mui-table-view">';
+	            		for(var i = 0; i < resultList.length; i++){
+	            			ht +=  '<li data-group="'+resultList[i].letter+'" class="mui-table-view-divider mui-indexed-list-group">'+resultList[i].letter+'</li>';
+	            			for(var j = 0; j < resultList[i].list.length; j++){	
+							ht += 	'<li data-value="'+resultList[i].list[j].friend_id+'" data-tags="'+resultList[i].list[j].friend_img+'" class="mui-table-view-cell mui-indexed-list-item mui-checkbox mui-left">';
+							ht +=	'<input type="checkbox" />'+resultList[i].list[j].friend_name+'</li>';
+	            			}
+					}
+	            		ht += '</ul>';
+	            		$(".mui-indexed-list-inner").html(ht);
+	           } catch(e) {}
 	        }
 
 	        function doSendAjaxRequest(xurl,param,fnCallback){
@@ -294,19 +294,43 @@
 	        }
 			/*------------------------------------------初始化好友列表结束-------------------------------------------*/
 			/*------------------------------------------标记已选中好友开始-------------------------------------------*/
-			var playersInfo = [];
+			var wholeDetail = [];
 			window.addEventListener('selectedFriends',function(event){
-				//获得事件参数
-				playersInfo = event.detail.playersInfo;
-				// 标记
-				for(var i = 0; i < playersInfo.length; i++){
-					var condition = "li[data-value="+playersInfo[i].player_id+"]";
+				wholeDetail = event.detail.wholeDetail;
+				for(var i = 0; i < wholeDetail.playerList.length; i++){
+					var condition = "li[data-value="+wholeDetail.playerList[i].player_id+"]";
 					$(condition).find("input").attr("checked",true);
 				}
-				//根据id向服务器请求新闻详情
 			});
 			/*------------------------------------------标记以选中好友结束-------------------------------------------*/
-			/*-----------------------------------------处理选中以及发送开始------------------------------------------*/
+			/*-----------------------------------------处理选中以及完成开始------------------------------------------*/
+			function modifyTournament(){
+	           	var aoData=[];
+	           	aoData.push( { "name": "smallSchedule.id",				"value": wholeDetail.id } );
+	           	aoData.push( { "name":"id_check",						"value": id_check } );
+	           	aoData.push( { "name": "smallSchedule.title", 			"value": wholeDetail.title } );
+				aoData.push( { "name": "smallSchedule.addr", 			"value": wholeDetail.addr } );
+				aoData.push( { "name": "smallSchedule.op_leader_id", 	"value": wholeDetail.op_leader_id } );
+				aoData.push( { "name": "smallSchedule.rule_type", 		"value": wholeDetail.rule_type } );
+				aoData.push( { "name": "smallSchedule.inning_count", 	"value": wholeDetail.inning_count } );
+				aoData.push( { "name": "smallSchedule.win_score", 		"value": wholeDetail.win_score } );
+				aoData.push( { "name": "smallSchedule.max_score", 		"value": wholeDetail.max_score } );
+				aoData.push( { "name": "smallSchedule.sort_type", 		"value": wholeDetail.sort_type } );
+				aoData.push( { "name": "smallSchedule.invite_team",		"value": wholeDetail.invite_team } );
+				aoData.push( { "name": "playerNames",					"value": playerNames.join() } );
+				aoData.push( { "name": "playerIds",						"value":	 playerIds.join() } );
+				doSendAjaxRequest("/actions/SmallSchedule.action?updateSmallSchedule",aoData,callbackForModify);
+	        }
+			function callbackForModify(obj){
+				try{
+					if(obj.status == true){
+						mui.openWindow({url: 'selectOnePlayer.html', id: 'selectOnePlayer.html'});
+					}
+				} catch(e){}
+			}
+			
+			var playerNames = [];
+			var playerIds = [];
 			mui.ready(function() {
 				var header = document.querySelector('header.mui-bar');
 				var list = document.getElementById('list');
@@ -318,29 +342,23 @@
 				//done event
 				done.addEventListener('tap', function() {
 					var checkboxArray = [].slice.call(list.querySelectorAll('input[type="checkbox"]'));
-					var selecedFriendsNew = [];
+					playerNames.length = 0;
+					playerIds.length = 0;
 					checkboxArray.forEach(function(box) {
 						if (box.checked) {
-							selectedFriendsNew.push({"":box.parentNode.innerText});
-							checkedDataValue.push(box.parentNode.getAttribute('data-value'));
+							playerIds.push( box.parentNode.getAttribute('data-value') );
+							playerNames.push( box.parentNode.innerText );
 						}
 					});
-					if (checkedValues.length > 0) {
-						var createPage = null;
-						if(!createPage){
-					    		createPage = plus.webview.currentWebview().opener();
-					  	}
-					  	//触发创建页面的selectMultiFriends事件
-					  	mui.fire(createPage,'selectMoreFriends',{
-					    		id:checkedDataValue,
-					    		name:checkedValues
-					  	});
-						//打开详情页面 
-						mui.openWindow({url: 'selectOnePlayer.html', id: 'selectOnePlayer.html'});
+
+					if (playerIds.length > 0) {
+					  	// 修改小型比赛数据
+						modifyTournament();
 					} else {
 						mui.alert('你没选择任何好友');
 					}
 				}, false);
+				
 				mui('.mui-indexed-list-inner').on('change', 'input', function() {
 					var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
 					var value = count ? "完成(" + count + ")" : "完成";
