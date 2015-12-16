@@ -68,9 +68,9 @@
 	<div class="mui-content">
 		<table class="tc" width="100%" height="120px">
 			<tr>
-				<td class="left tc"><img src="img/teamleader.png" width="60px" height="60px" style="border-radius: 50%;" /><br />红队</td>
-				<td class="score"><span class="f2d0">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="f2d0">0</span></span></td>
-				<td class="right"><img src="img/teamleader.png" width="60px" height="60px" style="border-radius: 50%;" /><br />蓝队</td>
+				<td class="left tc"><img src="img/teamleader.png" width="60px" height="60px" style="border-radius: 50%;" /><br /><span>红队</span></td>
+				<td class="score"><span class="f2d0 score1">0</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;VS&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="f2d0 score2">0</span></td>
+				<td class="right"><img src="img/teamleader.png" width="60px" height="60px" style="border-radius: 50%;" /><br /><span>蓝队</span></td>
 			</tr>	
 		</table>
 		<table class="mt10" width="100%">
@@ -215,9 +215,123 @@
         }
 
         function callbackOne(obj){
-           try{
-           	wholeDetail = obj.body;
-           }catch(e){}
+           	try{
+           		wholeDetail = obj.body;
+           		//初始化	
+           		var ht = '';
+           		if(wholeDetail.team1_url){
+           			ht = '<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+wholeDetail.team1_url+'" width="60px" height="60px" style="border-radius: 50%;" /><br /><span>红队</span>';
+           			$('.left').html( ht );	
+           		}
+           		if(wholeDetail.team2_url){
+           			ht = '<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+wholeDetail.team2_url+'" width="60px" height="60px" style="border-radius: 50%;" /><br /><span>蓝队</span>';
+           			$('.right').html( ht );	
+           		}
+           		$('.score .score1').text( wholeDetail.score_1 );
+           		$('.score .score2').text( wholeDetail.score_2 );
+           		/*--------初始化各个match--------*/
+           		var typeName = ['男单', '男双', '女单', '女双', '混双'];
+           		for(var i = 0; i < wholeDetail.matchList.length; i++){
+           			ht = '';
+       				ht += '<div class="competition mt10 ml5 mr5 pr">';
+					ht += 	'<table width="100%" class="pa" style="top:-3px">';
+					ht += 		'<tr height="40px">';
+					ht += 			'<td width="40%" class="tr f1d5">'+wholeDetail.matchList[i].score_1+'</td>';
+					ht +=			'<td width="20%" class="tc typebackground">'+typeName[parseInt(wholeDetail.matchList[i].competition_type)]+'</td>';
+					ht +=			'<td width="40%" class="tl f1d5">'+wholeDetail.matchList[i].score_2+'</td>';
+					ht +=		'</tr>';
+					ht +=	'</table>';
+					ht +=	'<hr class="mt20"></hr>';
+					switch (wholeDetail.matchList[i].competition_type)
+					{
+						case '0':
+						case '2':
+							ht +=	'<div class="competitionInfo mt20">';
+							ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
+							ht +=		'<table width="100%">';
+							ht +=			'<tr>';
+							ht +=				'<td width="40%" class="tc oneplayer">';
+							ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
+							ht +=				'</td>';
+							ht +=				'<td width="20%" class="tc">VS</td>';
+							ht +=				'<td width="40%" class="tc oneplayer">';
+							ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
+							ht +=				'</td>';
+							ht +=			'</tr>';
+							ht +=			'<tr>';
+							ht +=				'<td width="40%" class="tr">0</td>';
+							ht +=				'<td width="20%" class="tc">:</td>';
+							ht +=				'<td width="40%" class="tl">0</td>';
+							ht +=			'</tr>';
+							ht +=			'<tr>';
+							ht +=				'<td width="40%" class="tr">0</td>';
+							ht +=				'<td width="20%" class="tc">:</td>';
+							ht +=				'<td width="40%" class="tl">0</td>';
+							ht +=			'</tr>';
+							ht +=			'<tr>';
+							ht +=				'<td width="40%" class="tr">0</td>';
+							ht +=				'<td width="20%" class="tc">:</td>';
+							ht +=				'<td width="40%" class="tl">0</td>';
+							ht +=			'</tr>';
+							ht +=		'</table>';
+							ht +=		'<hr class="mt10"></hr>';
+							ht +=		'<div class="mui-button-row">';
+							ht +=			'<button type="button" class="mui-btn mui-btn-green watch" data-value="">观赛</button>&nbsp;&nbsp;';
+							ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
+							ht +=		'</div>';
+							ht +=	'</div>';
+							break;
+						case '1':
+						case '3':
+						case '4':
+							ht +=	'<div class="competitionInfo mt20">';
+							ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
+							ht +=		'<table width="100%">';
+							ht +=			'<tr>';
+							ht +=				'<td width="20%" class="tc oneplayer">';
+							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员1';
+							ht +=				'</td>';
+							ht +=				'<td width="20%" class="tc oneplayer">';
+							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员2';
+							ht +=				'</td>';
+							ht +=				'<td width="20%" class="tc">VS</td>';
+							ht +=				'<td width="20%" class="tc oneplayer" colspan="2">';
+							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员3';
+							ht +=				'</td>';
+							ht +=				'<td width="20%" class="tc oneplayer">';
+							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员4';
+							ht +=				'</td>';
+							ht +=			'</tr>';
+							ht +=			'<tr>';
+							ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
+							ht +=				'<td width="20%" class="tc">:</td>';
+							ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
+							ht +=			'</tr>';
+							ht +=			'<tr>';
+							ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
+							ht +=				'<td width="20%" class="tc">:</td>';
+							ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
+							ht +=			'</tr>';
+							ht +=			'<tr>';
+							ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
+							ht +=				'<td width="20%" class="tc">:</td>';
+							ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
+							ht +=			'</tr>';
+							ht +=		'</table>';
+							ht +=		'<hr class="mt10"></hr>';
+							ht +=		'<div class="mui-button-row">';
+							ht +=			'<button type="button" class="mui-btn mui-btn-green watch"  data-value="">观赛</button>&nbsp;&nbsp;';
+							ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
+							ht +=		'</div>';
+							ht +=	'</div>';
+							break;
+						default:
+							break;
+					}
+					ht += '</div>';
+					$('.matches').append( ht );	
+				}
+           	}catch(e){}
         }
 
         function doSendAjaxRequest(xurl,param,fnCallback){
@@ -255,7 +369,8 @@
            }
 		}
 	/*-------------------------------------------初始化单项结束---------------------------------------------*/
-	/*-------------------------------------------创建比赛开始-----------------------------------------------*/
+	/*-------------------------------------------创建单项开始-----------------------------------------------*/
+		var type = -1;
 		(function(m, doc) {
 			mui.init({
 				preloadPages:[{
@@ -288,6 +403,7 @@
 					// add game
 					typePicker.show(function(items) {
 						var gameType = JSON.stringify(items[0].value);
+						type = gameType;
 						var gameTypeName = JSON.stringify(items[0].text);
 						var ht = '';
 						ht += '<div class="competition mt10 ml5 mr5 pr">';
@@ -333,8 +449,8 @@
 								ht +=		'</table>';
 								ht +=		'<hr class="mt10"></hr>';
 								ht +=		'<div class="mui-button-row">';
-								ht +=			'<button type="button" class="mui-btn mui-btn-green">观赛</button>&nbsp;&nbsp;';
-								ht +=			'<button type="button" class="mui-btn mui-btn-danger">执裁</button>';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green watch" data-value="">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
 								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
@@ -377,8 +493,8 @@
 								ht +=		'</table>';
 								ht +=		'<hr class="mt10"></hr>';
 								ht +=		'<div class="mui-button-row">';
-								ht +=			'<button type="button" class="mui-btn mui-btn-green watch">观赛</button>&nbsp;&nbsp;';
-								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge">执裁</button>';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green watch"  data-value="">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
 								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
@@ -387,11 +503,29 @@
 						}
 						ht += '</div>';
 						$('.matches').append( ht );
+						// 创建单项
+						createMatch();
 					});
 				}, false);
 			});
 		})(mui, document);
-		/*-------------------------------------------创建比赛结束-----------------------------------------------*/
+		/*-------------------------------------------创建单项结束-----------------------------------------------*/
+		/*---------------------------------------创建单项提交数据开始--------------------------------------------*/
+		var matchIds = [];
+		function createMatch(){
+           	var aoData=[];
+           	aoData.push( { "name":"id_check",			"value": id_check} );
+           	aoData.push( { "name":"smallSchedule.id", 	"value": id } );
+           	aoData.push( { "name":"type",				"value": type } );
+			doSendAjaxRequest("/actions/SmallSchedule.action?insertSmallScheduleMatch",aoData,callbackForCreateMatch);
+        }
+        function callbackForCreateMatch(obj){
+           	try{
+           		matchIds.push( obj.msg );
+           		alert(obj.msg);
+           	}catch(e){}
+        }
+		/*---------------------------------------创建单项提交数据开始--------------------------------------------*/
 		/*----------------------------------向选择上场运动员页面发送数据开始--------------------------------------*/
 		$(document).on("click", ".oneplayer a", function(e){
 			var detailPage = null;
