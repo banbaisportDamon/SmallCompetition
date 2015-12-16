@@ -101,17 +101,17 @@
 			}
 		});
 		/*------------------------------------------------统计选择结束----------------------------------------------*/
-		/*---------------------------自定义事件1——接收competitionDetail.html数据开始--------------------------------*/
+		/*---------------------------自定义事件1——接收competitionDetail.html&selectMoreFriends.html数据开始--------------------------------*/
 		var wholeDetail = [];
 		window.addEventListener('selectedPlayer',function(event){
 			wholeDetail = event.detail.wholeDetail;
-			
 			//初始化头像
 			var total = wholeDetail.playerList.length + 1;
 			var num = (wholeDetail.playerList.length + 1)/4;
 			var i = 0;
 			var index = 0;
 			var ht = '';
+			$(".headimgs").html('');
 			ht +=	'<table width="100%">';
 			for(; i < num; i++){
 				ht +=	'<tr class="pt10 tc" height="120px">';
@@ -132,7 +132,7 @@
 			ht += '</table>';
 			$(".headimgs").html( ht );
 		});
-		/*---------------------------自定义事件1——接收competitionDetail.html数据结束--------------------------------*/
+		/*---------------------------自定义事件1——接收competitionDetail.html&selectMoreFriends.html数据结束--------------------------------*/
 		/*-----------------------------向selectMoreFriends.html发送已有好友数据开始---------------------------------*/
 		$(document).on('click', '#addplayer a',function(){
 			var detailPage = null;

@@ -324,10 +324,45 @@
 			function callbackForModify(obj){
 				try{
 					if(obj.status == true){
-						mui.openWindow({url: 'selectOnePlayer.html', id: 'selectOnePlayer.html'});
+						// 获取新的wholeDetail并返回
+						getNewDetail();
 					}
 				} catch(e){}
 			}
+			
+			function getNewDetail(){
+	           	var aoData=[];
+	           	aoData.push( { "name":"id_check","value": id_check} );
+	           	aoData.push( { "name":"smallSchedule.id", "value": wholeDetail.id } );
+				doSendAjaxRequest("/actions/SmallSchedule.action?getSmallScheduleDetail",aoData,callbackForNewDetail);
+	        }
+			
+			function callbackForNewDetail(obj){
+	           	try{
+	           		wholeDetail = obj.body;
+	           	
+					var detailPage = null;
+			  		if(!detailPage){
+			    			detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
+			  		}
+			  		mui.fire(detailPage,'selectedPlayer',{
+			  			wholeDetail: wholeDetail
+			  		});
+					mui.openWindow({ 
+						id:"selectOnePlayer.html", 
+						url:"selectOnePlayer.html",
+						createNew:false,
+						show: {
+							aniShow: 'slide-in-left',
+							uration: 200
+		                },
+		                waiting: {
+		                    autoShow: true, //自动显示等待框
+		                    title: '正在加载...', //等待对话框上显示的提示内容
+		                }
+					});
+	           }catch(e){}
+	        }
 			
 			var playerNames = [];
 			var playerIds = [];
@@ -352,8 +387,9 @@
 					});
 
 					if (playerIds.length > 0) {
-					  	// 修改小型比赛数据
+					  	// 修改小型比赛数据, 包含获取新数据
 						modifyTournament();
+						
 					} else {
 						mui.alert('你没选择任何好友');
 					}
