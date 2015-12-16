@@ -73,7 +73,6 @@
 				<td class="right"><img src="img/teamleader.png" width="60px" height="60px" style="border-radius: 50%;" /><br />蓝队</td>
 			</tr>	
 		</table>
-		
 		<table class="mt10" width="100%">
 			<tr>
 				<td width="5%" height="15px"></td>
@@ -86,7 +85,7 @@
 				<td width="5%" height="15px"></td>
 			</tr>
 		</table>
-		<!--
+	<!--	
 		<div class="competition mt10 ml5 mr5 pr">
 			<img src="img/during.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />
 			<table width="100%" class="pa" style="top:-3px">
@@ -130,6 +129,11 @@
 						<td width="20%" class="tl" colspan="2">0</td>
 					</tr>
 				</table>
+				<hr class="mt10"></hr>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-green" onclick="return false;">观赛</button>&nbsp;&nbsp;
+					<button type="button" class="mui-btn mui-btn-danger" onclick="return false;">执裁</button>
+				</div>
 			</div>
 		</div>
 		<div class="competition mt10 ml5 mr5 pr">
@@ -169,6 +173,11 @@
 						<td width="40%" class="tl">0</td>
 					</tr>
 				</table>
+				<hr class="mt10"></hr>
+				<div class="mui-button-row">
+					<button type="button" class="mui-btn mui-btn-green" onclick="return false;">观赛</button>&nbsp;&nbsp;
+					<button type="button" class="mui-btn mui-btn-danger" onclick="return false;">执裁</button>
+				</div>
 			</div>
 		</div>-->
 	</div>
@@ -176,9 +185,85 @@
 	<script src="js/mui.picker.min.js"></script>
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
+	/*-------------------------------------------初始化单项开始---------------------------------------------*/
+		var id_check = "1439286113287,0";
+   		var g_UrlBase="http://192.168.199.206:8081";
+   		var resultList=[];
+   		var id = -1;
+   		var playersInfo = [];
+   		
+   		window.addEventListener('myinit',function(event){
+			//通过event.detail可获得传递过来的参数内容
+			id = event.detail.id;
+			getResult();
+			alert(id);
+		});
+    
+        function getResult(){
+           	var aoData=[];
+           	aoData.push( { "name":"id_check","value": id_check} );
+           	aoData.push( { "name":"smallSchedule.id", "value": id } );
+			doSendAjaxRequest("/actions/SmallSchedule.action?getSmallScheduleDetail",aoData,callbackOne);
+        }
+
+        function callbackOne(obj){
+           try{
+            resultList=obj.body;
+            //store the players info
+            for(var i = 0; i < resultList.playerList.length; i++){
+            		playersInfo.push({"player_name": resultList.playerList[i].player_name, "img_url": resultList.playerList[i].img_url, "player_id": resultList.playerList[i].player_id,"seeded_player": resultList.playerList[i].seeded_player});
+            }
+            var ht = '';
+			if(resultList.matchList.length != 0){
+				//...
+			}
+            //$(".mui-indexed-list-inner").html(ht);
+           }catch(e){}
+        }
+
+        function doSendAjaxRequest(xurl,param,fnCallback){
+            if ( xurl.indexOf('http://') == -1 ) xurl = g_UrlBase+xurl;
+            $.ajax( {
+                "url":  xurl,
+                "data": param,
+                "timeout" : 10000,
+                "contentType" : "application/x-www-form-urlencoded; charset=utf-8",
+                "success": function (json) {
+                    try{
+                        fnCallback( json );
+                    }catch(e){}
+                },
+                "dataType": "json",
+                "cache": false,
+                "type": "POST",
+                "error": function (xhr, error, thrown) {
+                }
+            } );
+        }
+
+        function getUrlParam(xurl,name){
+            var para="";
+            if(xurl.lastIndexOf("?")>0){
+                para=xurl.substring(xurl.lastIndexOf("?")+1,xurl.length);
+                var arr=para.split("&");
+                para="";
+                for(var i=0;i<arr.length;i++){
+                   if(arr[i].split("=")[0]==name) return arr[i].split("=")[1];
+                }
+                return "";
+           }else{
+                return "";
+           }
+		}
+	/*-------------------------------------------初始化单项结束---------------------------------------------*/
 	/*-------------------------------------------创建比赛开始-----------------------------------------------*/
 		(function(m, doc) {
-			m.init();
+			mui.init({
+				preloadPages:[{
+			    		id:'selectOnePlayer.html',
+			    		url:'selectOnePlayer.html'           
+			  	}]
+			});
 			m.ready(function() {
 				//普通示例
 				var typePicker = new m.PopPicker();
@@ -247,6 +332,11 @@
 								ht +=				'<td width="40%" class="tl">0</td>';
 								ht +=			'</tr>';
 								ht +=		'</table>';
+								ht +=		'<hr class="mt10"></hr>';
+								ht +=		'<div class="mui-button-row">';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green" onclick="return false;">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger" onclick="return false;">执裁</button>';
+								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
 							case '1':
@@ -286,6 +376,11 @@
 								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
 								ht +=			'</tr>';
 								ht +=		'</table>';
+								ht +=		'<hr class="mt10"></hr>';
+								ht +=		'<div class="mui-button-row">';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green watch">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge">执裁</button>';
+								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
 							default:
@@ -294,6 +389,18 @@
 						ht += '</div>';
 						$('.mui-content').append( ht );
 						mui(".oneplayer").on('tap', 'a', function(e){
+							var detailPage = null;
+							var id = this.getAttribute('id');
+						  	//获得详情页面
+						  	if(!detailPage){
+						    		detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
+						  	}
+						  	//触发详情页面的newsId事件
+						  	mui.fire(detailPage,'selectedPlayer',{
+						    		playersInfo: playersInfo 
+						  	});
+						  	alert(playersInfo.join());
+							//打开详情页面          
 							mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
 						});
 					});

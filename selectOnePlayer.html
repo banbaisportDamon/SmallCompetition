@@ -31,7 +31,7 @@
 		<h1 class="mui-center mui-title tc">选择上场队员</h1>
 	</header>
 	<div class="mui-content">
-		<div class="p20">
+		<div class="p20 headimgs"><!--
 			<table width="100%">
 				<tr class="pt10 tc" height="120px">
 					<td id="addplayer" width="25%">
@@ -54,7 +54,7 @@
 					<td width="25%" class="pr"><img src="img/teamleader.png" width="65px" height="65px" class="headimg"/><br /><span>马景涛</span></td>
 					<td width="25%" class="pr"><img src="img/teamleader.png" width="65px" height="65px" class="headimg"/><br /><span>呵呵哒</span></td>
 				</tr>
-			</table>
+			</table>-->
 		</div>
 		<div id="seed"><button>种子选手</button></div>
 	</div>
@@ -64,25 +64,74 @@
 		
 		/*------------------------------------------------添加队友结束----------------------------------------------*/
 		/*------------------------------------------------选择队员开始----------------------------------------------*/
-		$(document).ready(function(){
-			$('.headimg').click(function(){
-				if(!$(this).hasClass("selected")){
-					$(".selected").each(function(index, element){
-						$($(this).parent().find("img")[1]).remove();
-						$(this).removeClass("selected");
-					});
-					$(this).parent().append('<img src="img/playerselected.png" width="15px" height="15px" class="pa" style="top:15px; right: 10px;"/>');
-					$(this).addClass("selected");
-				} else {
+		$(document).on('click', '.headimg', function(){
+			if(!$(this).hasClass("selected")){
+				$(".selected").each(function(index, element){
 					$($(this).parent().find("img")[1]).remove();
 					$(this).removeClass("selected");
-				}
-			});
+				});
+				$(this).parent().append('<img src="img/playerselected.png" width="15px" height="15px" class="pa" style="top:15px; right: 10px;"/>');
+				$(this).addClass("selected");
+			} else {
+				$($(this).parent().find("img")[1]).remove();
+				$(this).removeClass("selected");
+			}
 		});
 		/*------------------------------------------------选择队员结束----------------------------------------------*/
+		/*---------------------------自定义事件1——接收competitionDetail.html数据开始--------------------------------*/
+		var playersInfo = [];
+		window.addEventListener('selectedPlayer',function(event){
+			//通过event.detail可获得传递过来的参数内容
+			if(playersInfo.length != 0) playersInfo.length = 0; 
+			for(var i = 0; i < event.detail.playersInfo.length; i++){
+				playersInfo.push(event.detail.playersInfo[i]);
+			}
+			//初始化头像
+			var total = playersInfo.length + 1;
+			var num = (playersInfo.length + 1)/4;
+			var i = 0;
+			var index = 0;
+			
+			var ht = '';
+			ht +=	'<table width="100%">';
+			for(; i < num; i++){
+				ht +=	'<tr class="pt10 tc" height="120px">';
+				for(var j = 0; j < 4; j++, index++){
+					if(index == 0){
+						ht += '<td id="addplayer" width="25%"><a href="#"><img src="img/addplayer.png" width="65px" height="65px"/></a><br />&nbsp;</td>';
+					} else {
+						ht += '<td width="25%" class="pr">';
+						if(index < total){
+							ht +=	'<img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+playersInfo[index-1].img_url+'" width="65px" height="65px" class="headimg" style="border-radius:50%"/><br />';
+							ht +=	'<span data-value="'+playersInfo[index-1].player_id+'">'+playersInfo[index-1].player_name+'</span>';
+						}
+						ht += '</td>';
+					}
+				}
+				ht += '</tr>';
+			}
+			ht += '</table>';
+			$(".headimgs").html( ht );
+		});
+		/*---------------------------自定义事件1——接收competitionDetail.html数据结束--------------------------------*/
+		/*---------------------------自定义事件2——接收selectMoreFriends.html数据开始--------------------------------*/
+		var multiFriendsId = [];
+		var multiFriendsName = [];
+		window.addEventListener('selectMoreFriends',function(event){
+			//通过event.detail可获得传递过来的参数内容
+			if(multiFriendsId.length != 0) multiFriendsId.length = 0;
+			if(multiFriendsName.length != 0) multiFriendsName.length = 0;
+			for(var i = 0; i < event.detail.id.length; i++){
+				multiFriendsId.push(event.detail.id[i]);
+				multiFriendsName.push(event.detail.name[i]);
+			}
+			//alert(multiFriendsId.join());
+			//alert(multiFriendsName.join());
+		});
+		/*---------------------------自定义事件1——接收selectMoreFriends.html数据结束--------------------------------*/
 		/*--------------------------------------------------页面链接------------------------------------------------*/
-		mui("#addplayer").on('tap', 'a', function(e){
-			mui.openWindow({ id:"selectMultiFriends.html", url:"selectMultiFriends.html"});
+		$(document).on('click', '#addplayer a',function(){
+			mui.openWindow({ id:"selectMoreFriends.html", url:"selectMoreFriends.html"});
 		});
 		mui("#seed").on('tap', 'button', function(e){
 			mui.openWindow({ id:"singlesRound.html", url:"singlesRound.html"});

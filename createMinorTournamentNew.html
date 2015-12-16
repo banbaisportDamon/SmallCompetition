@@ -332,7 +332,7 @@
 			/*-------------------------------------------确认触发开始-----------------------------------------------*/
             var resultList=[];
             var id_check = "1439286113287,0";
-       		var g_UrlBase="http://192.168.1.107:8081";
+       		var g_UrlBase="http://192.168.199.206:8081";
             
 			$(document).ready(function(){
 				$('#confirmCreate button').on('click', function(){
@@ -341,7 +341,7 @@
 					var leaderSelectFlag = true;
 					if(invite_team == 1 && op_leader_id == -1)
 						leaderSelectFlag = false;
-					if(competitionName != '' && competitionLocation != '' && multiFriends.length != 0 && leaderSelectFlag){
+					if(competitionName != '' && competitionLocation != '' && multiFriendsName.length != 0 && leaderSelectFlag){
 						/*获取已填写的数据*/
 						var sendData = [];
 						sendData.push( { "name": "id_check", 					"value": id_check } );
@@ -354,6 +354,8 @@
 						sendData.push( { "name": "smallSchedule.max_score", 		"value": topScore } );
 						sendData.push( { "name": "smallSchedule.sort_type", 		"value": sort_type } );
 						sendData.push( { "name": "smallSchedule.invite_team",	"value": invite_team } );
+						sendData.push( { "name": "playerNames",					"value": multiFriendsName.join() } );
+						sendData.push( { "name": "playerIds",					"value":	 multiFriendsId.join() } );
 						try{
 			            		var ind=document.URL.indexOf("htmlAPI");
 			                if ( ind != -1 ) {
@@ -397,13 +399,18 @@
 			}
 			/*-------------------------------------------确认触发结束-----------------------------------------------*/
 			/*---------------------------自定义事件1——接收selectMultiFriends.html数据开始----------------------------*/
-			var multiFriends = [];
+			var multiFriendsId = [];
+			var multiFriendsName = [];
 			window.addEventListener('selectMultiFriends',function(event){
 				//通过event.detail可获得传递过来的参数内容
-				if(multiFriends.length != 0) multiFriends.length = 0;
-				for(var i = 0; i < event.detail.data.length; i++){
-					multiFriends.push(event.detail.data[i]);
+				if(multiFriendsId.length != 0) multiFriendsId.length = 0;
+				if(multiFriendsName.length != 0) multiFriendsName.length = 0;
+				for(var i = 0; i < event.detail.id.length; i++){
+					multiFriendsId.push(event.detail.id[i]);
+					multiFriendsName.push(event.detail.name[i]);
 				}
+				//alert(multiFriendsId.join());
+				//alert(multiFriendsName.join());
 			});
 			/*---------------------------自定义事件1——接收selectMultiFriends.html数据结束----------------------------*/
 			/*---------------------------自定义事件2——接收selectOneFriends.html数据开始----------------------------*/

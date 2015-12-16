@@ -6,7 +6,7 @@
   	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		
-    <script src="js/mui.min.js"></script>
+    <!--<script src="js/mui.min.js"></script>-->
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/base.css" rel="stylesheet"/>
     <!--
@@ -27,7 +27,7 @@
     		.tournament tr {color: #6e6e6e;}
     		.tournament tr:first-child {color: #000;}
     		.tournament td {height: 20px;}
-    		.tournament .tournament-date { 
+    		.tournament .tournament-name a { 
     			height: 15px; 
     			color: #18b4ed; 
     			line-height: 15px;
@@ -110,24 +110,50 @@
 			</div>
 		</div>-->
 	</div>
+	<script src="js/mui.min.js"></script>
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
 	/*---------------------------------加载比赛信息-----------------------------------------*/
        //var result_id=1446084452513;
-       var id_check = "1439286113287,0"
-       var g_UrlBase="http://192.168.1.107:8081";
+       var user_id = 1439286113287;
+       var id_check = "1439286113287,0";
+       var g_UrlBase="http://192.168.199.206:8081";
        var resultList=[];
+       var tournamentInfo = [];
        
-       $(document).ready(function() {
+       mui.init({
+		  preloadPages:[{
+		    id:'competitionDetail.html',
+		    url:'competitionDetail.html'           
+		  }
+		  ]
+		});
+       mui.ready(function() {
            /*result_id=getUrlParam(document.URL,"id");
-           
-           try{
-             var ind=document.URL.indexOf("htmlAPI");
-             if ( ind != -1 ) {								//if exist htmlAPI
-               g_UrlBase=document.URL.substring(0,ind);		//url before htmlAPI
-             }
-           }catch(e){}*/
-           getResult();
+           	try{
+             	var ind=document.URL.indexOf("htmlAPI");
+            		if ( ind != -1 ) {								//if exist htmlAPI
+            			g_UrlBase=document.URL.substring(0,ind);		//url before htmlAPI
+            		}
+           	}catch(e){}*/
+           	getResult();
+           	mui(".mui-content").on('tap','a',function(){
+           		//jump to competitionDetail.html
+           		var index = parseInt(this.getAttribute("data-value"));
+           		if(tournamentInfo[index].create_user === user_id || tournamentInfo[index].op_leader_id === user_id){
+           			var detailPage = null;
+           			var competitionid = tournamentInfo[this.getAttribute('data-value')].id;
+  					detailPage = plus.webview.getWebviewById('competitionDetail.html');
+					//触发详情页面的initialize事件
+					mui.fire(detailPage, 'myinit', {
+						id:competitionid
+					});
+					//打开对阵详情页面
+					mui.openWindow({ id:"competitionDetail.html",url:"competitionDetail.html" });
+           		} else {
+           			alert("you can only watching");
+           		}
+			});
        } );
         
         function getResult(){
@@ -148,7 +174,8 @@
             var ruleType = ['PK对抗赛','单打排位赛','单打循环赛','双打排位赛','双打循环赛','交叉双打积分赛'];
             for(var i = 0; i < resultList.length; i++){
             		ht +=	'<div class="tournament">';
-            		ht +=		'<div class="tournament-date tc mb10" height="40px">'+resultList[i].title+'</div>';
+            		tournamentInfo.push( { "id":resultList[i].id, "create_user":resultList[i].create_user, "op_leader_id":resultList[i].op_leader_id} );
+            		ht +=		'<div class="tournament-name tc mb10" height="40px"><a href="#" data-value="'+i+'">'+resultList[i].title+'</a></div>';
             		ht += 		'<hr></hr>';
             		ht +=		'<div class="pl10 pr10">';
             		ht +=			'<table width="100%" class="tl">';
@@ -168,6 +195,7 @@
 				ht +=	'</div>';
             }
             $(".competitionList").html( ht );
+            //alert(tournamentInfo[0].create_user);
            }catch(e){}
         }
 
@@ -224,7 +252,6 @@
 			parentWebview.evalJS('mui.openWindow({ id:"createMinorTournamentNew.html", url:"createMinorTournamentNew.html"})');
 		});
 		/*--------------------------------------------加入父webview结束---------------------------------------------*/
-		/*--------------------------------------------开始---------------------------------------------*/
 	
 	</script>
 </body>

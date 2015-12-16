@@ -319,12 +319,12 @@
 					    		createPage = plus.webview.currentWebview().opener();
 					  	}
 					  	//触发创建页面的selectMultiFriends事件
-					  	mui.fire(createPage,'selectMultiFriends',{
+					  	mui.fire(createPage,'selectMoreFriends',{
 					    		id:checkedDataValue,
 					    		name:checkedValues
 					  	});
 						//打开详情页面 
-						mui.openWindow({url: 'createMinorTournamentNew.html', id: 'createMinorTournamentNew.html'});
+						mui.openWindow({url: 'selectOnePlayer.html', id: 'selectOnePlayer.html'});
 					} else {
 						mui.alert('你没选择任何好友');
 					}
