@@ -197,12 +197,15 @@
    		//获取从首页和创建比赛的页面传来的id号
    		window.addEventListener('myinit',function(event){
 			//通过event.detail可获得传递过来的参数内容
+			alert(event.detail.id);
 			if(id != event.detail.id){
 				id = event.detail.id;
 				$(".matches").html('');
 				//alert(id);
 				getResult();
 			} else {
+				alert("refresh");
+				$(".matches").html('');
 				getResult();
 			}
 		});
@@ -246,82 +249,90 @@
 					{
 						case '0':
 						case '2':
-							ht +=	'<div class="competitionInfo mt20">';
+							ht +=	'<div class="competitionInfo mt20" data-tags="'+wholeDetail.matchList[i].id+'">';
 							ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
-							ht +=		'<table width="100%">';
+							ht +=		'<table width="100%"><tbody>';
 							ht +=			'<tr>';
-							ht +=				'<td width="40%" class="tc oneplayer">';
-							ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
+							ht +=				'<td width="40%" class="tc oneplayer" data-tags="a1">';
+							if(wholeDetail.matchList[i].team_1_a != -1){
+								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)+'</span>';
+							} else {
+								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
+							}
 							ht +=				'</td>';
 							ht +=				'<td width="20%" class="tc">VS</td>';
-							ht +=				'<td width="40%" class="tc oneplayer">';
-							ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
+							ht +=				'<td width="40%" class="tc oneplayer" data-tags="b1">';
+							if(wholeDetail.matchList[i].team_2_a != -1){
+								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)+'</span>';
+							} else {
+								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
+							}
 							ht +=				'</td>';
 							ht +=			'</tr>';
-							ht +=			'<tr>';
-							ht +=				'<td width="40%" class="tr">0</td>';
-							ht +=				'<td width="20%" class="tc">:</td>';
-							ht +=				'<td width="40%" class="tl">0</td>';
-							ht +=			'</tr>';
-							ht +=			'<tr>';
-							ht +=				'<td width="40%" class="tr">0</td>';
-							ht +=				'<td width="20%" class="tc">:</td>';
-							ht +=				'<td width="40%" class="tl">0</td>';
-							ht +=			'</tr>';
-							ht +=			'<tr>';
-							ht +=				'<td width="40%" class="tr">0</td>';
-							ht +=				'<td width="20%" class="tc">:</td>';
-							ht +=				'<td width="40%" class="tl">0</td>';
-							ht +=			'</tr>';
-							ht +=		'</table>';
+							for(var j = 0; j < wholeDetail.inning_count; j++){
+								ht +=		'<tr>';
+								ht +=			'<td width="40%" class="tr inningcount'+i+'">0</td>';
+								ht +=			'<td width="20%" class="tc">:</td>';
+								ht +=			'<td width="40%" class="tl inningcount'+i+'">0</td>';
+								ht +=		'</tr>';
+							}
+							ht +=		'</tbody></table>';
 							ht +=		'<hr class="mt10"></hr>';
 							ht +=		'<div class="mui-button-row">';
-							ht +=			'<button type="button" class="mui-btn mui-btn-green watch" data-value="">观赛</button>&nbsp;&nbsp;';
-							ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
+							ht +=			'<button type="button" class="mui-btn mui-btn-green watch" data-tags="'+wholeDetail.matchList[i].id+'">观赛</button>&nbsp;&nbsp;';
+							ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-tags="'+wholeDetail.matchList[i].id+'">执裁</button>';
 							ht +=		'</div>';
 							ht +=	'</div>';
 							break;
 						case '1':
 						case '3':
 						case '4':
-							ht +=	'<div class="competitionInfo mt20">';
+							ht +=	'<div class="competitionInfo mt20" data-tags="'+wholeDetail.matchList[i].id+'">';
 							ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
-							ht +=		'<table width="100%">';
+							ht +=		'<table width="100%"><tbody>';
 							ht +=			'<tr>';
-							ht +=				'<td width="20%" class="tc oneplayer">';
-							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员1';
+							ht +=				'<td width="20%" class="tc oneplayer" data-tags="a1">';
+							if(wholeDetail.matchList[i].team_1_a != -1){
+								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)+'</span>';
+							} else {
+								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
+							}
 							ht +=				'</td>';
-							ht +=				'<td width="20%" class="tc oneplayer">';
-							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员2';
+							ht +=				'<td width="20%" class="tc oneplayer" data-tags="a2">';
+							if(wholeDetail.matchList[i].team_1_b != -1){
+								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_1_b)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_1_b)+'</span>';
+							} else {
+								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
+							}
 							ht +=				'</td>';
 							ht +=				'<td width="20%" class="tc">VS</td>';
-							ht +=				'<td width="20%" class="tc oneplayer" colspan="2">';
-							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员3';
+							ht +=				'<td width="20%" class="tc oneplayer" data-tags="b1">';
+							if(wholeDetail.matchList[i].team_2_a != -1){
+								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)+'</span>';
+							} else {
+								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员3</span>';
+							}
 							ht +=				'</td>';
-							ht +=				'<td width="20%" class="tc oneplayer">';
-							ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员4';
+							ht +=				'<td width="20%" class="tc oneplayer" data-tags="b2">';
+							if(wholeDetail.matchList[i].team_2_b != -1){
+								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_2_b)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_2_b)+'</span>';
+							} else {
+								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
+							}
 							ht +=				'</td>';
 							ht +=			'</tr>';
-							ht +=			'<tr>';
-							ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
-							ht +=				'<td width="20%" class="tc">:</td>';
-							ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
-							ht +=			'</tr>';
-							ht +=			'<tr>';
-							ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
-							ht +=				'<td width="20%" class="tc">:</td>';
-							ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
-							ht +=			'</tr>';
-							ht +=			'<tr>';
-							ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
-							ht +=				'<td width="20%" class="tc">:</td>';
-							ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
-							ht +=			'</tr>';
-							ht +=		'</table>';
+							for(var j = 0; j < wholeDetail.inning_count; j++){
+								ht +=		'<tr>';
+								ht +=			'<td width="20%" class="tr inningcount'+i+'" colspan="2">0</td>';
+								ht +=			'<td width="20%" class="tc">:</td>';
+								ht +=			'<td width="20%" class="tl inningcount'+i+'" colspan="2">0</td>';
+								ht +=		'</tr>';
+							}
+							ht +=		'</tbody></table>';
 							ht +=		'<hr class="mt10"></hr>';
 							ht +=		'<div class="mui-button-row">';
-							ht +=			'<button type="button" class="mui-btn mui-btn-green watch"  data-value="">观赛</button>&nbsp;&nbsp;';
-							ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
+							ht +=			'<button type="button" class="mui-btn mui-btn-green watch"  data-tags="'+wholeDetail.matchList[i].id+'">观赛</button>&nbsp;&nbsp;';
+							ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-tags="'+wholeDetail.matchList[i].id+'">执裁</button>';
 							ht +=		'</div>';
 							ht +=	'</div>';
 							break;
@@ -333,7 +344,23 @@
 				}
            	}catch(e){}
         }
-
+		function getPlayerImg(obj, id){
+			for(var i = 0; i < obj.length; i++){
+				if(obj[i].player_id == id){
+					return obj[i].img_url;
+				}
+			}
+			return '';
+		}	
+		function getPlayerName(obj, id){
+			for(var i = 0; i < obj.length; i++){
+				if(obj[i].player_id == id){
+					return obj[i].player_name;
+				}
+			}
+			return '';
+		}
+		
         function doSendAjaxRequest(xurl,param,fnCallback){
             if ( xurl.indexOf('http://') == -1 ) xurl = g_UrlBase+xurl;
             $.ajax( {
@@ -419,82 +446,66 @@
 						{
 							case '0':
 							case '2':
-								ht +=	'<div class="competitionInfo mt20">';
+								ht +=	'<div class="competitionInfo mt20" data-tags="">';
 								ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
-								ht +=		'<table width="100%">';
+								ht +=		'<table width="100%"><tbody>';
 								ht +=			'<tr>';
-								ht +=				'<td width="40%" class="tc oneplayer">';
-								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br />运动员1';
+								ht +=				'<td width="40%" class="tc oneplayer" data-tags="a1">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
 								ht +=				'</td>';
 								ht +=				'<td width="20%" class="tc">VS</td>';
-								ht +=				'<td width="40%" class="tc oneplayer">';
-								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br />运动员2';
+								ht +=				'<td width="40%" class="tc oneplayer" data-tags="b1">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
 								ht +=				'</td>';
 								ht +=			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="40%" class="tr">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="40%" class="tl">0</td>';
-								ht +=			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="40%" class="tr">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="40%" class="tl">0</td>';
-								ht +=			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="40%" class="tr">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="40%" class="tl">0</td>';
-								ht +=			'</tr>';
-								ht +=		'</table>';
+								for(var i = 0; i < wholeDetail.inning_count; i++){
+									ht +=		'<tr>';
+									ht +=			'<td width="20%" class="tr inningcount'+i+'">0</td>';
+									ht +=			'<td width="20%" class="tc">:</td>';
+									ht +=			'<td width="20%" class="tl inningcount'+i+'">0</td>';
+									ht +=		'</tr>';
+								}
+								ht +=		'</tbody></table>';
 								ht +=		'<hr class="mt10"></hr>';
 								ht +=		'<div class="mui-button-row">';
-								ht +=			'<button type="button" class="mui-btn mui-btn-green watch" data-value="">观赛</button>&nbsp;&nbsp;';
-								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green watch" data-tags="">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-tags="">执裁</button>';
 								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
 							case '1':
 							case '3':
 							case '4':
-								ht +=	'<div class="competitionInfo mt20">';
+								ht +=	'<div class="competitionInfo mt20" data-tags="">';
 								ht +=		'<img src="img/before.png" width="20px" height="20px" class="pa" style="top:0;right: 0;" />';
-								ht +=		'<table width="100%">';
+								ht +=		'<table width="100%"><tbody>';
 								ht +=			'<tr>';
-								ht +=				'<td width="20%" class="tc oneplayer">';
-								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员1';
+								ht +=				'<td width="20%" class="tc oneplayer" data-tags="a1">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
 								ht +=				'</td>';
-								ht +=				'<td width="20%" class="tc oneplayer">';
-								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员2';
+								ht +=				'<td width="20%" class="tc oneplayer" data-tags="a2">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
 								ht +=				'</td>';
 								ht +=				'<td width="20%" class="tc">VS</td>';
-								ht +=				'<td width="20%" class="tc oneplayer" colspan="2">';
-								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员3';
+								ht +=				'<td width="20%" class="tc oneplayer" data-tags="b1">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员3</span>';
 								ht +=				'</td>';
-								ht +=				'<td width="20%" class="tc oneplayer">';
-								ht +=					'<img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"><br />运动员4';
+								ht +=				'<td width="20%" class="tc oneplayer" data-tags="b2">';
+								ht +=					'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员4</span>';
 								ht +=				'</td>';
 								ht +=			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
-								ht +=			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
-								ht +=			'</tr>';
-								ht +=			'<tr>';
-								ht +=				'<td width="20%" class="tr" colspan="2">0</td>';
-								ht +=				'<td width="20%" class="tc">:</td>';
-								ht +=				'<td width="20%" class="tl" colspan="2">0</td>';
-								ht +=			'</tr>';
-								ht +=		'</table>';
+								for(var i = 0; i < wholeDetail.inning_count; i++){
+									ht +=		'<tr>';
+									ht +=			'<td width="20%" class="tr inningcount'+i+'">0</td>';
+									ht +=			'<td width="20%" class="tc">:</td>';
+									ht +=			'<td width="20%" class="tl inningcount'+i+'">0</td>';
+									ht +=		'</tr>';
+								}
+								ht +=		'</tbody></table>';
 								ht +=		'<hr class="mt10"></hr>';
 								ht +=		'<div class="mui-button-row">';
-								ht +=			'<button type="button" class="mui-btn mui-btn-green watch"  data-value="">观赛</button>&nbsp;&nbsp;';
-								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-value="">执裁</button>';
+								ht +=			'<button type="button" class="mui-btn mui-btn-green watch"  data-tags="">观赛</button>&nbsp;&nbsp;';
+								ht +=			'<button type="button" class="mui-btn mui-btn-danger judge" data-tags="">执裁</button>';
 								ht +=		'</div>';
 								ht +=	'</div>';
 								break;
@@ -523,6 +534,9 @@
            	try{
            		matchIds.push( obj.msg );
            		alert(obj.msg);
+           		$(".competitionInfo:last").attr("data-tags", obj.msg);
+           		$(".competitionInfo:last watch").attr("data-tags", obj.msg);
+           		$(".competitionInfo:last judge").attr("data-tags", obj.msg);
            	}catch(e){}
         }
 		/*---------------------------------------创建单项提交数据开始--------------------------------------------*/
@@ -532,8 +546,11 @@
 		  	if(!detailPage){
 		    		detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
 		  	}
+		  	var matchId = $(this).parent().parent().parent().parent().parent().attr("data-tags");
 		  	mui.fire(detailPage,'selectedPlayer',{
-		  		wholeDetail: wholeDetail
+		  		wholeDetail: wholeDetail,
+		  		matchId: matchId,
+		  		pos: $(this).parent().attr("data-tags")
 		  	});
 			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
 		});

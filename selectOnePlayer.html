@@ -29,6 +29,7 @@
 	<header class="mui-navbar-inner mui-bar mui-bar-nav">
 		<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left" href="createMinorTournamentNew.html"></a>
 		<h1 class="mui-center mui-title tc">选择上场队员</h1>
+		<a id='done' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue">完成</a>
 	</header>
 	<div class="mui-content">
 		<div class="p20 headimgs"><!--
@@ -84,27 +85,14 @@
 			}
 		});
 		/*------------------------------------------------选择队员结束----------------------------------------------*/
-		/*------------------------------------------------统计选择开始----------------------------------------------*/
-		/*
-		mui('.mui-indexed-list-inner').on('change', 'input', function() {
-			var count = list.querySelectorAll('input[type="checkbox"]:checked').length;
-			var value = count ? "完成(" + count + ")" : "完成";
-			done.innerHTML = value;
-			if (count) {
-				if (done.classList.contains("mui-disabled")) {
-					done.classList.remove("mui-disabled");
-				}
-			} else {
-				if (!done.classList.contains("mui-disabled")) {
-					done.classList.add("mui-disabled");
-				}
-			}
-		});
-		/*------------------------------------------------统计选择结束----------------------------------------------*/
 		/*---------------------------自定义事件1——接收competitionDetail.html&selectMoreFriends.html数据开始--------------------------------*/
 		var wholeDetail = [];
+		var matchId = -1;
+		var pos = '';
 		window.addEventListener('selectedPlayer',function(event){
 			wholeDetail = event.detail.wholeDetail;
+			matchId = event.detail.matchId;
+			pos = event.detail.pos; 
 			//初始化头像
 			var total = wholeDetail.playerList.length + 1;
 			var num = (wholeDetail.playerList.length + 1)/4;
@@ -145,21 +133,121 @@
 			mui.openWindow({ id:"selectMoreFriends.html", url:"selectMoreFriends.html"});
 		});
 		/*-----------------------------向selectMoreFriends.html发送已有好友数据结束---------------------------------*/
-		/*---------------------------自定义事件2——接收selectMoreFriends.html数据开始--------------------------------*/
-		/*
-		var multiFriendsId = [];
-		var multiFriendsName = [];
-		window.addEventListener('selectMoreFriends',function(event){
-			//通过event.detail可获得传递过来的参数内容
-			if(multiFriendsId.length != 0) multiFriendsId.length = 0;
-			if(multiFriendsName.length != 0) multiFriendsName.length = 0;
-			for(var i = 0; i < event.detail.id.length; i++){
-				multiFriendsId.push(event.detail.id[i]);
-				multiFriendsName.push(event.detail.name[i]);
+		/*----------------------------------------事件监听——处理完成开始--------------------------------------------*/
+		var id_check = "1439286113287,0";
+   		var g_UrlBase="http://192.168.199.206:8081";
+   		
+		$(document).on("click", "#done", function(){
+			if($(".headimgs .selected").length == 0){
+				mui.alert("请选择一个上场运动员","温馨提示",function(){});
+			} else {
+				var friendId = $(".headimgs .selected").parent().find("span").attr("data-value");
+				setMatchPlayer(pos, friendId, matchId, id_check);
 			}
-			//alert(multiFriendsId.join());
 		});
-		/*---------------------------自定义事件1——接收selectMoreFriends.html数据结束--------------------------------*/
+		function setMatchPlayer(pos, id, matchId, id_check){
+           	var aoData=[];
+           	aoData.push( { "name":"id_check",		"value": id_check } );
+           	aoData.push( { "name":"match.id", 		"value": matchId } );
+           	aoData.push( { "name":"match.team_1_a", "value": -1 } );
+           	aoData.push( { "name":"match.team_1_b",	"value": -1 } );
+           	aoData.push( { "name":"match.team_2_a", "value": -1 } );
+           	aoData.push( { "name":"match.team_2_b", "value": -1 } );
+           	aoData.push( { "name":"type",			"value": 1 } );
+           	switch(pos){
+           		case 'a1':
+           			aoData[2].value = id;
+           			break;
+           		case 'a2':
+           			aoData[3].value = id;
+           			break;
+           		case 'b1':
+           			aoData[4].value = id;
+           			aoData[6].value = 2;
+           			break;
+           		case 'b2':
+           			aoData[5].value = id;
+           			aoData[6].value = 2;
+           			break;
+           		default:
+           			break;
+           	}
+           	alert(aoData[2].value);
+           	alert(aoData[3].value);
+           	alert(aoData[4].value);
+           	alert(aoData[5].value);
+           	alert(aoData[6].value);
+			doSendAjaxRequest("/actions/SmallSchedule.action?submitCompetitionMatchMember",aoData,callbackForSetMatchPlayer);
+        }
+
+        function callbackForSetMatchPlayer(obj){
+        		try{
+            		if(obj.status == true){
+            			//向competitionDetail.html发送id激活myinit事件
+					var detailPage = null;
+				  	if(!detailPage){
+				    		detailPage = plus.webview.getWebviewById('competitionDetail.html');
+				  	}
+				  	alert("id send");
+				  	alert(wholeDetail.id);
+				  	mui.fire(detailPage,'myinit',{
+						id: wholeDetail.id
+				  	});
+				  	alert("ok");
+            			mui.openWindow({
+						id:"competitionDetail.html", 
+						url:"competitionDetail.html",
+						createNew:false,
+						show: {
+							aniShow: 'slide-in-left',
+							uration: 200
+		                },
+		                waiting: {
+		                    autoShow: true, //自动显示等待框
+		                    title: '正在加载...', //等待对话框上显示的提示内容
+		                }
+					});
+            		} else {
+            			mui.alert("设置失败请重试","系统提示",function(){});
+            		}
+           } catch(e) {}
+        }
+
+        function doSendAjaxRequest(xurl,param,fnCallback){
+            if ( xurl.indexOf('http://') == -1 ) xurl = g_UrlBase+xurl;
+            $.ajax( {
+                "url":  xurl,
+                "data": param,
+                "timeout" : 10000,
+                "contentType" : "application/x-www-form-urlencoded; charset=utf-8",
+                "success": function (json) {
+                    try{
+                        fnCallback( json );
+                    }catch(e){}
+                },
+                "dataType": "json",
+                "cache": false,
+                "type": "POST",
+                "error": function (xhr, error, thrown) {
+                }
+            } );
+        }
+
+        function getUrlParam(xurl,name){
+            var para="";
+            if(xurl.lastIndexOf("?")>0){
+                para=xurl.substring(xurl.lastIndexOf("?")+1,xurl.length);
+                var arr=para.split("&");
+                para="";
+                for(var i=0;i<arr.length;i++){
+                   if(arr[i].split("=")[0]==name) return arr[i].split("=")[1];
+                }
+                return "";
+           }else{
+                return "";
+           }
+        }
+		/*----------------------------------------事件监听——处理完成开始--------------------------------------------*/
 		/*--------------------------------------------------页面链接------------------------------------------------*/
 		mui("#seed").on('tap', 'button', function(e){
 			mui.openWindow({ id:"singlesRound.html", url:"singlesRound.html"});
