@@ -197,14 +197,12 @@
    		//获取从首页和创建比赛的页面传来的id号
    		window.addEventListener('myinit',function(event){
 			//通过event.detail可获得传递过来的参数内容
-			alert(event.detail.id);
 			if(id != event.detail.id){
 				id = event.detail.id;
 				$(".matches").html('');
 				//alert(id);
 				getResult();
 			} else {
-				alert("refresh");
 				$(".matches").html('');
 				getResult();
 			}
@@ -292,14 +290,14 @@
 							ht +=		'<table width="100%"><tbody>';
 							ht +=			'<tr>';
 							ht +=				'<td width="20%" class="tc oneplayer" data-tags="a1">';
-							if(wholeDetail.matchList[i].team_1_a != -1){
+							if(wholeDetail.matchList[i].team_1_a != -1 && confirmPlayerExist(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)){
 								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_1_a)+'</span>';
 							} else {
 								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
 							}
 							ht +=				'</td>';
 							ht +=				'<td width="20%" class="tc oneplayer" data-tags="a2">';
-							if(wholeDetail.matchList[i].team_1_b != -1){
+							if(wholeDetail.matchList[i].team_1_b != -1 && confirmPlayerExist(wholeDetail.playerList, wholeDetail.matchList[i].team_1_b)){
 								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_1_b)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_1_b)+'</span>';
 							} else {
 								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员2</span>';
@@ -307,14 +305,14 @@
 							ht +=				'</td>';
 							ht +=				'<td width="20%" class="tc">VS</td>';
 							ht +=				'<td width="20%" class="tc oneplayer" data-tags="b1">';
-							if(wholeDetail.matchList[i].team_2_a != -1){
+							if(wholeDetail.matchList[i].team_2_a != -1 && confirmPlayerExist(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)){
 								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_2_a)+'</span>';
 							} else {
 								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员3</span>';
 							}
 							ht +=				'</td>';
 							ht +=				'<td width="20%" class="tc oneplayer" data-tags="b2">';
-							if(wholeDetail.matchList[i].team_2_b != -1){
+							if(wholeDetail.matchList[i].team_2_b != -1 && confirmPlayerExist(wholeDetail.playerList, wholeDetail.matchList[i].team_2_b)){
 								ht +=				'<a href="#"><img src="http://banbaisport.oss-cn-beijing.aliyuncs.com/'+getPlayerImg(wholeDetail.playerList, wholeDetail.matchList[i].team_2_b)+'" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>'+getPlayerName(wholeDetail.playerList, wholeDetail.matchList[i].team_2_b)+'</span>';
 							} else {
 								ht +=				'<a href="#"><img src="img/teamleader.png" width="40px" height="40px" style="border-radius: 50%;"></a><br /><span>运动员1</span>';
@@ -359,6 +357,14 @@
 				}
 			}
 			return '';
+		}
+		function confirmPlayerExist(obj, id){ 
+			for(var i = 0; i < obj.length; i++){
+				if(obj[i].player_id == id){
+					return true;
+				}
+			}
+			return false;
 		}
 		
         function doSendAjaxRequest(xurl,param,fnCallback){
@@ -496,9 +502,9 @@
 								ht +=			'</tr>';
 								for(var i = 0; i < wholeDetail.inning_count; i++){
 									ht +=		'<tr>';
-									ht +=			'<td width="20%" class="tr inningcount'+i+'">0</td>';
+									ht +=			'<td width="20%" class="tr inningcount'+i+'" colspan="2">0</td>';
 									ht +=			'<td width="20%" class="tc">:</td>';
-									ht +=			'<td width="20%" class="tl inningcount'+i+'">0</td>';
+									ht +=			'<td width="20%" class="tl inningcount'+i+'" colspan="2">0</td>';
 									ht +=		'</tr>';
 								}
 								ht +=		'</tbody></table>';

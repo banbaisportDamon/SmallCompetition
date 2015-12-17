@@ -295,8 +295,12 @@
 			/*------------------------------------------初始化好友列表结束-------------------------------------------*/
 			/*------------------------------------------标记已选中好友开始-------------------------------------------*/
 			var wholeDetail = [];
+			var matchId = -1;
+			var pos = '';
 			window.addEventListener('selectedFriends',function(event){
 				wholeDetail = event.detail.wholeDetail;
+				matchId = event.detail.matchId;
+				pos = event.detail.pos;
 				for(var i = 0; i < wholeDetail.playerList.length; i++){
 					var condition = "li[data-value="+wholeDetail.playerList[i].player_id+"]";
 					$(condition).find("input").attr("checked",true);
@@ -346,7 +350,9 @@
 			    			detailPage = plus.webview.getWebviewById('selectOnePlayer.html');
 			  		}
 			  		mui.fire(detailPage,'selectedPlayer',{
-			  			wholeDetail: wholeDetail
+			  			wholeDetail: wholeDetail,
+			  			matchId:matchId,
+			  			pos:pos
 			  		});
 					mui.openWindow({ 
 						id:"selectOnePlayer.html", 
