@@ -143,9 +143,8 @@
 			if($(".headimgs .selected").length == 0){
 				mui.alert("请选择一个上场运动员","温馨提示",function(){});
 			} else {
-				alert("you selected one");
 				var friendId = $(".headimgs .selected").parent().find("span").attr("data-value");
-				alert("friendId:"+friendId+" pos:"+pos+" matchId:"+matchId+" id_check:"+id_check);
+				//alert("friendId:"+friendId+" pos:"+pos+" matchId:"+matchId+" id_check:"+id_check);
 				setMatchPlayer(pos, friendId, matchId, id_check);
 			}
 		});
@@ -180,7 +179,7 @@
            		default:
            			break;
            	}
-           	alert('match.team_1_a:'+aoData[2].value+' match.team_1_b:'+aoData[3].value+' type:'+aoData[4].value);
+           	//alert('match.team_1_a:'+aoData[2].value+' match.team_1_b:'+aoData[3].value+' type:'+aoData[4].value);
 			doSendAjaxRequest("/actions/SmallSchedule.action?submitCompetitionMatchMember",aoData,callbackForSetMatchPlayer);
         }
 		function getSelectedId(obj,name){

@@ -528,7 +528,6 @@
 		})(mui, document);
 		/*-------------------------------------------创建单项结束-----------------------------------------------*/
 		/*---------------------------------------创建单项提交数据开始--------------------------------------------*/
-		var matchIds = [];
 		function createMatch(){
            	var aoData=[];
            	aoData.push( { "name":"id_check",			"value": id_check} );
@@ -560,7 +559,35 @@
 		  	});
 			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
 		});
-		/*----------------------------------向选择上场运动员页面发送数据结束--------------------------------------*/	
+		/*----------------------------------向选择上场运动员页面发送数据结束--------------------------------------*/
+		/*----------------------------------------观看比赛事件处理开始-------------------------------------------*/
+		$(document).on("click", ".watch", function(e){
+			var detailPage = mui.preload({
+			    url: "viewerLiving.html",
+			    id: "viewerLiving.html"
+			});
+			var matchId = $(this).attr("data-tags");
+			mui.fire(detailPage,'viewer',{
+		  		wholeDetail: wholeDetail,
+		  		matchId: matchId
+		  	});
+			mui.openWindow({ id:"viewerLiving.html", url:"viewerLiving.html"});
+		});
+		/*----------------------------------------观看比赛事件处理结束-------------------------------------------*/
+		/*----------------------------------------裁判执裁事件处理开始-------------------------------------------*/
+		$(document).on("click", ".judge", function(e){
+			var detailPage = mui.preload({
+			    url: "refereeLiving.html",
+			    id: "refereeLiving.html"
+			});
+			var matchId = $(this).attr("data-tags");
+			mui.fire(detailPage,'referee',{
+		  		wholeDetail: wholeDetail,
+		  		matchId: matchId
+		  	});
+			mui.openWindow({ id:"refereeLiving.html", url:"refereeLiving.html"});
+		});
+		/*----------------------------------------裁判执裁事件处理结束-------------------------------------------*/
 		/*-------------------------------------------页面链接切换-----------------------------------------------*/
 		mui(".oneplayer").on('tap', 'a', function(e){
 			mui.openWindow({ id:"selectOnePlayer.html", url:"selectOnePlayer.html"});
