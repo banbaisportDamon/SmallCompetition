@@ -151,23 +151,25 @@
            	aoData.push( { "name":"match.id", 		"value": matchId } );
            	aoData.push( { "name":"match.team_1_a", "value": -1 } );
            	aoData.push( { "name":"match.team_1_b",	"value": -1 } );
-           	aoData.push( { "name":"match.team_2_a", "value": -1 } );
-           	aoData.push( { "name":"match.team_2_b", "value": -1 } );
            	aoData.push( { "name":"type",			"value": 1 } );
            	switch(pos){
            		case 'a1':
            			aoData[2].value = id;
+           			aoData[3].value = getSelectedId(wholeDetail.matchList, 'team_1_a');
            			break;
            		case 'a2':
+           			aoData[2].value = getSelectedId(wholeDetail.matchList, 'team_1_b');
            			aoData[3].value = id;
            			break;
            		case 'b1':
-           			aoData[4].value = id;
-           			aoData[6].value = 2;
+           			aoData[2].value = id;
+           			aoData[3].value = getSelectedId(wholeDetail.matchList, 'team_2_a');
+           			aoData[4].value = 2;
            			break;
            		case 'b2':
-           			aoData[5].value = id;
-           			aoData[6].value = 2;
+           			aoData[2].value = getSelectedId(wholeDetail.matchList, 'team_2_b');
+           			aoData[3].value = id;
+           			aoData[4].value = 2;
            			break;
            		default:
            			break;
@@ -175,10 +177,41 @@
            	alert(aoData[2].value);
            	alert(aoData[3].value);
            	alert(aoData[4].value);
-           	alert(aoData[5].value);
-           	alert(aoData[6].value);
 			doSendAjaxRequest("/actions/SmallSchedule.action?submitCompetitionMatchMember",aoData,callbackForSetMatchPlayer);
         }
+		function getSelectedId(obj,name){
+			switch(name){
+				case 'team_1_a':
+					for(var i = 0; i < wholeDetail.matchList.length; i++){
+						if(wholeDetail.matchList[i].team_1_a != -1){
+							return wholeDetail.matchList[i].team_1_a;
+						}
+					}
+					break;
+				case 'team_1_b':
+					for(var i = 0; i < wholeDetail.matchList.length; i++){
+						if(wholeDetail.matchList[i].team_1_b != -1){
+							return wholeDetail.matchList[i].team_1_b;
+						}
+					}
+					break;
+				case 'team_2_a':
+					for(var i = 0; i < wholeDetail.matchList.length; i++){
+						if(wholeDetail.matchList[i].team_2_a != -1){
+							return wholeDetail.matchList[i].team_2_a;
+						}
+					}
+					break;
+				case 'team_2_b':
+					for(var i = 0; i < wholeDetail.matchList.length; i++){
+						if(wholeDetail.matchList[i].team_2_b != -1){
+							return wholeDetail.matchList[i].team_2_b;
+						}
+					}
+					break;
+			}
+			return -1;
+		}
 
         function callbackForSetMatchPlayer(obj){
         		try{
