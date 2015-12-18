@@ -7,6 +7,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 		
     <!--<script src="js/mui.min.js"></script>-->
+    <script src="js/configure.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/base.css" rel="stylesheet"/>
     <!--
@@ -114,28 +115,27 @@
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
 	/*---------------------------------加载比赛信息-----------------------------------------*/
-       //var result_id=1446084452513;
-       var user_id = 1439286113287;
-       var id_check = "1439286113287,0";
-       var g_UrlBase="http://192.168.199.206:8081";
+       //var user_id = 1439286113287;
+       //var id_check = "1439286113287,0";
+       var user_id = -1;
+       var id_check = '';
+       
        var resultList=[];
        var tournamentInfo = [];
        
        mui.init({
-		  preloadPages:[{
-		    id:'competitionDetail.html',
-		    url:'competitionDetail.html'           
-		  }
-		  ]
+		  	preloadPages:[{
+		    		id:'competitionDetail.html',
+		    		url:'competitionDetail.html'           
+			}]
 		});
-       mui.ready(function() {
-           /*result_id=getUrlParam(document.URL,"id");
-           	try{
-             	var ind=document.URL.indexOf("htmlAPI");
-            		if ( ind != -1 ) {								//if exist htmlAPI
-            			g_UrlBase=document.URL.substring(0,ind);		//url before htmlAPI
-            		}
-           	}catch(e){}*/
+
+       	mui.plusReady(function(){
+       		//getResult for debug!!!
+       		var curPage = plus.webview.getWebviewById("tournamentList.html");
+			id_check = curPage.id_check;
+			user_id = curPage.user_id;
+
            	getResult();
            	mui(".mui-content").on('tap','a',function(){
            		//jump to competitionDetail.html
@@ -144,11 +144,11 @@
            			var detailPage = null;
            			var competitionid = tournamentInfo[this.getAttribute('data-value')].id;
   					detailPage = plus.webview.getWebviewById('competitionDetail.html');
-					//触发详情页面的initialize事件
 					mui.fire(detailPage, 'myinit', {
 						id:competitionid
+						//user_id:user_id,
+						//id_check:id_check
 					});
-					//打开对阵详情页面
 					mui.openWindow({ id:"competitionDetail.html",url:"competitionDetail.html" });
            		} else {
            			alert("you can only watching");
@@ -168,7 +168,6 @@
 
         function getCompetitionRankListCallback(obj){
            try{
-           	//alert("YES");
             resultList=obj.aaData;
             var ht='';
             var ruleType = ['PK对抗赛','单打排位赛','单打循环赛','双打排位赛','双打循环赛','交叉双打积分赛'];
@@ -249,7 +248,7 @@
 			if(parentWebview ==null){
 				parentWebview = mui.currentWebview.opener();
 			}
-			parentWebview.evalJS('mui.openWindow({ id:"createMinorTournamentNew.html", url:"createMinorTournamentNew.html"})');
+			parentWebview.evalJS('mui.openWindow({ id:"createMinorTournamentNew.html", url:"createMinorTournamentNew.html", extras:{id_check:id_check, user_id:user_id }})');
 		});
 		/*--------------------------------------------加入父webview结束---------------------------------------------*/
 	

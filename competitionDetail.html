@@ -184,21 +184,28 @@
 			</div>
 		</div>-->
 	</div>
+	<script src="js/configure.js"></script>
 	<script src="js/mui.poppicker.js"></script>
 	<script src="js/mui.picker.min.js"></script>
 	<script src="js/jquery-1.10.2.min.js"></script>
 	<script>
 	/*-------------------------------------------初始化单项开始---------------------------------------------*/
-		var id_check = "1439286113287,0";
-   		var g_UrlBase="http://192.168.199.206:8081";
+		//var id_check = "1439286113287,0";
    		var id = -1;
    		var wholeDetail = [];
+   		//var id_check = '';
+   		//var user_id = -1;
    		
    		//获取从首页和创建比赛的页面传来的id号
    		window.addEventListener('myinit',function(event){
 			//通过event.detail可获得传递过来的参数内容
 			if(id != event.detail.id){
 				id = event.detail.id;
+				//id_check = event.detail.id_check;
+				//user_id = event.detail.user_id;
+				
+				alert("id_check:"+id_check+"user_id:"+user_id);
+				
 				$(".matches").html('');
 				//alert(id);
 				getResult();

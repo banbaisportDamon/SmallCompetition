@@ -7,6 +7,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	
     <script src="js/mui.min.js"></script>
+    <script src="js/configure.js"></script>
     <link href="css/mui.min.css" rel="stylesheet"/>
     <link href="css/base.css" rel="stylesheet"/>
     <style>
@@ -26,6 +27,37 @@
     		.mui-content .mui-content-padded { margin: 5px }
     </style>	
     <script>
+    		// for debug, or clear -1,''
+    		//var user_id = 1439286113287;
+       	//var id_check = "1439286113287,0";
+       	var user_id = -1;
+       	var id_check = '';
+       	
+       	function setIdAndLoginTime(memberId,loginTime){
+			user_id = memberId;
+			id_check = memberId+","+loginTime;
+			//  把参数传给 tournamentList.html
+			mui.init({
+				swipeBack: false,
+				statusBarBackground: '#18b4ed',
+				subpages:[{
+					url: 'tournamentList.html',
+					id: 'tournamentList.html',
+					styles: {
+						top: '45px',
+						bottom: 0,
+						bounce: 'vertical'
+					},
+					extras:{
+						user_id:user_id,
+						id_check:id_check
+					}
+				}]
+			});
+		}
+       	
+       	// for Debug
+       	/*
 		mui.init({
 			swipeBack: false,
 			statusBarBackground: '#18b4ed',
@@ -36,10 +68,12 @@
 					top: '45px',
 					bottom: 0,
 					bounce: 'vertical'
+				},extras:{
+					user_id:user_id,
+					id_check:id_check
 				}
 			}]
-		});
-
+		});*/
 	</script>
 </head>
 <body>
@@ -50,19 +84,6 @@
 	</header>
 	<!--tournamentList-->
 	<script>
-	/*
-		mui.plusReady(function() {
-			//仅支持竖屏显示
-			plus.screen.lockOrientation("portrait-primary");
-		});
-		mui("header").on('tap', '#topPopover', function(e){
-			var target = plus.webview.getWebviewById('tournamentList.html');
-			alert("nima");
-			mui.fire(target, 'triggerCreate', {
-				para: 'trigger'
-			});
-		});
-		*/
 		/*----------------------------------------弹出框开始-----------------------------------------*/
 		var menuElem = document.getElementById("menu");
 		var contentWebview = null;
